@@ -15,47 +15,46 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
-  appBar: AppBar(
-  toolbarHeight: 60, // Adjust the height as needed
-  backgroundColor: Theme.of(context).colorScheme.primary,
-  titleSpacing: 0, // Remove default title spacing
-  title: Row(
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0),
-        child: GestureDetector(
-           onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const DesktopScaffold(),
-                      ));
-                    },
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/mavunohub_icon.png',
-                width: 30,
-                height: 30,
-              ),
-              SizedBox(width: 8), // Add some horizontal spacing
-              Text(
-                'MavunoHub',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  fontFamily: "Gilmer",
-                  color: Theme.of(context).colorScheme.onBackground,
+      appBar: AppBar(
+        toolbarHeight: 60, // Adjust the height as needed
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        titleSpacing: 0, // Remove default title spacing
+        title: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const DesktopScaffold(),
+                  ));
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/mavunohub_icon.png',
+                      width: 30,
+                      height: 30,
+                    ),
+                    SizedBox(width: 8), // Add some horizontal spacing
+                    Text(
+                      'MavunoHub',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: "Gilmer",
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+        centerTitle: false,
       ),
-    ],
-  ),
-  centerTitle: false,
-)
-,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(

@@ -1,0 +1,36 @@
+String generatePassword() {
+  final String capitalLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  final String smallLetters = 'abcdefghijklmnopqrstuvwxyz';
+  final String specialCharacters = '!@#\$%^&*()_-+=<>?';
+  final String numbers = '0123456789';
+
+  final String passwordString =
+      '$capitalLetters$smallLetters$specialCharacters$numbers';
+
+  final random = Random.secure();
+
+
+  final capitalLetter = capitalLetters[random.nextInt(capitalLetters.length)];
+  final smallLetter = smallLetters[random.nextInt(smallLetters.length)];
+  final specialCharacter = specialCharacters[random.nextInt(specialCharacters.length)];
+  final numbersList = List.generate(7, (index) {
+    final randomIndex = random.nextInt(numbers.length);
+    return numbers[randomIndex];
+  });
+
+  numbersList.shuffle(random);
+
+  final passwordComponents =<String>[capitalLetter, smallLetter, specialCharacter, ...numbersList];
+  passwordComponents.shuffle(random);
+
+  final password = passwordComponents.join(); 
+
+  return password;
+}
+
+void main() {
+  final password = generatePassword();
+  print('Generated Password: $password');
+}
+
+

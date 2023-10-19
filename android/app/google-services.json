@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "914748917180",
+    "project_id": "mavunohub-37adb",
+    "storage_bucket": "mavunohub-37adb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914748917180:android:5ea0106f94c07f16ddd7b9",
+        "android_client_info": {
+          "package_name": "com.example.test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqDLwMe_bKY0ImJV_sp9DE3ekb8Z6Prp8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

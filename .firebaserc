@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "mavunohub-37adb",
+    " mavunohub": "mavunohub-37adb",
+    "mavunohub-37adb": "mavunohub-37adb"
+  },
+  "targets": {},
+  "etags": {}
+}

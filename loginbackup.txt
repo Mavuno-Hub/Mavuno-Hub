@@ -1,0 +1,276 @@
+// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:mavunohub/provider/auth_provider.dart';
+import 'package:mavunohub/responsive/desktop_body.dart';
+import 'package:mavunohub/responsive/mobile_body.dart';
+import 'package:mavunohub/responsive/responsive_layout.dart';
+import 'package:mavunohub/responsive/tablet_body.dart';
+import 'package:mavunohub/screens/app_screens/sign_in.dart';
+import 'package:mavunohub/screens/app_screens/verify_code.dart';
+import '../../components/custom_button.dart';
+import '../../components/form_text.dart';
+import '../../components/password.dart';
+import 'forgot_password.dart';
+import 'package:provider/provider.dart';
+
+class LogIn extends StatefulWidget {
+  const LogIn({Key? key}) : super(key: key);
+
+  @override
+  State<LogIn> createState() => _LogInState();
+}
+
+class _LogInState extends State<LogIn> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: const ResponsiveLayout(
+        desktopBody: DesktopLogIn(),
+        mobileBody: MobileLogIn(),
+        tabletBody: TabletLogIn(),
+      ),
+    );
+  }
+}
+
+class TabletLogIn extends StatelessWidget {
+  const TabletLogIn({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Spacer(flex: 1),
+          Image.asset('assets/mavunohub_logo.png', width: 250, height: 250),
+          FormText(
+            title: 'Enter Username',
+            text: 'Enter Username',
+          ),
+          FormText(
+            title: 'Enter PhoneNumber',
+            text: 'Enter PhoneNumber',
+          ),
+          const PassWord(
+            title: 'Create Password', // Updated the title to 'Password'
+            text: 'Create Password',
+          ),
+          const PassWord(
+            title: 'Confirm Password', // Updated the title to 'Password'
+            text: 'Confirm Password',
+          ),
+          FormButton(
+              text: 'Create Account',
+              action: () {
+                // FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password)
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const LogIn()));
+              }),
+          const Spacer(flex: 1),
+        ],
+      ),
+    );
+  }
+}
+
+class MobileLogIn extends StatefulWidget {
+  const MobileLogIn({
+    super.key,
+  });
+
+  @override
+  State<MobileLogIn> createState() => _MobileLogInState();
+}
+
+class _MobileLogInState extends State<MobileLogIn> {
+  // final _formKey = GlobalKey<FormState>();
+  final _userNameOrPhoneNumberController = TextEditingController();
+
+  final _passwordController = TextEditingController();
+  final auth = FirebaseAuth.instance;
+
+// Provider
+
+  @override
+  Widget build(BuildContext context) {
+    final ap = Provider.of<AuthProvider>(context, listen: false);
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Spacer(flex: 1),
+          Image.asset('assets/mavunohub_logo.png', width: 250, height: 250),
+          FormText(
+            title: 'Username or PhoneNumber',
+            text: 'Username or PhoneNumber',
+            controller: _userNameOrPhoneNumberController,
+          ),
+          PassWord(
+            title: 'Enter Password',
+            text: 'Enter Password',
+            controller: _passwordController,
+          ),
+          FormButton(
+            text: 'Log In',
+            action: () {
+              //   final userNameOrPhoneNumber =
+              //       _userNameOrPhoneNumberController.text;
+              //   final password = _passwordController.text;
+      
+              //   if (userNameOrPhoneNumber.isNotEmpty && password.isNotEmpty) {
+              //     FirebaseAuth.instance
+              //         .verifyPhoneNumber(
+              //       phoneNumber: _userNameOrPhoneNumberController.text,
+              //       verificationCompleted: (_) {},
+              //       verificationFailed: (e) {
+              //         print("Error ${e.toString()}");
+              //       },
+              //       codeSent: (String verificationId, int? token) {
+              //         Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => VerifyCodeScreen(
+              //                       verificationid: '',
+              //                     )));
+              //       },
+              //       codeAutoRetrievalTimeout: (e) {},
+              //     )
+              //         .then((value) {
+              //       Navigator.of(context).push(MaterialPageRoute(
+              //           builder: (context) => const ForgotPassword()));
+              //     });
+              //     // Both fields are entered, you can use them here
+              //   } else if (userNameOrPhoneNumber.isNotEmpty) {
+              //     // Only username or phone number is entered
+              //   } else if (password.isNotEmpty) {
+              //     // Only password is entered
+              //   }
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              // Wrap the row with Center
+              child: Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Center the row horizontally
+                children: [
+                  Text(
+                    'Don\'t have an Account?',
+                    style: TextStyle(
+                      fontFamily: 'Gilmer',
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      ap.isSignedIn == true // when true, then fetch shared preference data
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MobileScaffold()))
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignIn()));
+                    },
+                    child: Text(
+                      ' Sign Up',
+                      style: TextStyle(
+                        fontFamily: 'Gilmer',
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.tertiary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Spacer(flex: 1),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const ForgotPassword()));
+            },
+            child: Text(
+              'Forgot Password?',
+              style: TextStyle(
+                fontFamily: 'Gilmer',
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.tertiary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          const Spacer(flex: 1),
+        ],
+      ),
+    );
+  }
+}
+
+class DesktopLogIn extends StatelessWidget {
+  const DesktopLogIn({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Center(
+          child: SizedBox(
+            width: 400,
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Spacer(flex: 1),
+                  Image.asset('assets/mavunohub_logo.png',
+                      width: 250, height: 250),
+                  FormText(
+                    title: 'Enter Username',
+                    text: 'Enter Username',
+                  ),
+                  FormText(
+                    title: 'Enter PhoneNumber',
+                    text: 'Enter PhoneNumber',
+                  ),
+                  const PassWord(
+                    title: 'Create Password', // Updated the title to 'Password'
+                    text: 'Create Password',
+                  ),
+                  const PassWord(
+                    title:
+                        'Confirm Password', // Updated the title to 'Password'
+                    text: 'Confirm Password',
+                  ),
+                  FormButton(
+                      text: 'Create Account',
+                      action: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const LogIn()));
+                      }),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

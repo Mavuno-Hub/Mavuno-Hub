@@ -9,17 +9,17 @@ ThemeData lightTheme = ThemeData(
   textTheme: const TextTheme(
       bodyLarge: TextStyle(
           fontFamily: "Gilmer",
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
           fontSize: 16,
           color: AppColor.dark),
       bodyMedium: TextStyle(
           fontFamily: "Gilmer",
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
           fontSize: 14,
           color: AppColor.dark),
       bodySmall: TextStyle(
           fontFamily: "Gilmer",
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
           fontSize: 12,
           color: AppColor.dark)),
   appBarTheme: const AppBarTheme(

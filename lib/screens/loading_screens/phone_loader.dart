@@ -4,7 +4,7 @@ import 'package:mavunohub/cards/my_box.dart';
 import 'package:mavunohub/cards/my_tile.dart';
 
 class MobileLoader extends StatefulWidget {
-  const MobileLoader({Key? key}) : super(key: key);
+  const MobileLoader({super.key});
 
   @override
   State<MobileLoader> createState() => _MobileLoaderState();

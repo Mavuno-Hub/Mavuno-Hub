@@ -2,7 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mavunohub/auth/firebase_auth_service.dart';
+import 'package:mavunohub/logic/auth/firebase_auth_service.dart';
 import 'package:mavunohub/responsive/responsive_layout.dart';
 import 'package:mavunohub/screens/app_screens/log_in_page.dart';
 import '../../components/custom_button.dart';
@@ -10,7 +10,7 @@ import '../../components/form_text.dart';
 import '../../components/password.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
+  const SignIn({super.key});
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -48,7 +48,7 @@ class _TabletSignInState extends State<TabletSignIn> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phonenumberController = TextEditingController();
   // This asynchronous function handles user registration with Firebase Authentication.
-
+  
   final FirebaseAuthService _auth = FirebaseAuthService();
 
   void _signUpWithEmail() async {
@@ -76,7 +76,7 @@ class _TabletSignInState extends State<TabletSignIn> {
         ),
       );
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const LogInUser()));
+          .push(MaterialPageRoute(builder: (context) => LogInUser()));
       // Clear the form fields
       // Navigate to the login page
     } catch (e) {
@@ -134,7 +134,7 @@ class _TabletSignInState extends State<TabletSignIn> {
         ),
       );
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const LogInUser()));
+          .push(MaterialPageRoute(builder: (context) => LogInUser()));
       // Clear the form fields
       _phonenumberController.clear();
       // Navigate to the login page
@@ -254,7 +254,7 @@ class _TabletSignInState extends State<TabletSignIn> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LogInUser()));
+                                builder: (context) => LogInUser()));
                       },
                       child: Text(
                         ' Log In',
@@ -322,7 +322,7 @@ class _MobileSignInState extends State<MobileSignIn> {
         ),
       );
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const LogInUser()));
+          .push(MaterialPageRoute(builder: (context) => LogInUser()));
       // Clear the form fields
       // Navigate to the login page
     } catch (e) {
@@ -380,7 +380,7 @@ class _MobileSignInState extends State<MobileSignIn> {
         ),
       );
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const LogInUser()));
+          .push(MaterialPageRoute(builder: (context) => LogInUser()));
       // Clear the form fields
       _phonenumberController.clear();
       // Navigate to the login page
@@ -500,7 +500,7 @@ class _MobileSignInState extends State<MobileSignIn> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LogInUser()));
+                                builder: (context) => LogInUser()));
                       },
                       child: Text(
                         ' Log In',
@@ -568,7 +568,7 @@ class _DesktopSignInState extends State<DesktopSignIn> {
         ),
       );
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const LogInUser()));
+          .push(MaterialPageRoute(builder: (context) => LogInUser()));
       // Clear the form fields
       // Navigate to the login page
     } catch (e) {
@@ -626,7 +626,7 @@ class _DesktopSignInState extends State<DesktopSignIn> {
         ),
       );
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const LogInUser()));
+          .push(MaterialPageRoute(builder: (context) => LogInUser()));
       // Clear the form fields
       _phonenumberController.clear();
       // Navigate to the login page
@@ -746,7 +746,7 @@ class _DesktopSignInState extends State<DesktopSignIn> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LogInUser()));
+                                builder: (context) => LogInUser()));
                       },
                       child: Text(
                         ' Log In',

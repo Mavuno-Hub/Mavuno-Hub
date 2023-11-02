@@ -11,7 +11,7 @@ class FormField extends StatefulWidget {
   final String? label;
 
   const FormField({
-    Key? key,
+    super.key,
      required this.text,
    this.hint,
     this.controller,
@@ -19,7 +19,7 @@ class FormField extends StatefulWidget {
     this.suffix,
     this.onClicked,
     this.label,
-  }) : super(key: key);
+  });
 
   @override
   State<FormField> createState() => _FormFieldState();

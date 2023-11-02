@@ -8,21 +8,21 @@ class MyBox extends StatelessWidget {
 
   final VoidCallback? CardPress;
   const MyBox(
-      {Key? key,
+      {super.key,
       this.icon,
       this.title,
       this.hint,
       this.CardPress,
-      this.onClicked})
-      : super(key: key);
+      this.onClicked});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: GestureDetector(
+      child:  GestureDetector(
         onTap: onClicked,
         child: Container(
+          height: 150,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: Theme.of(context).colorScheme.secondary),
@@ -37,47 +37,40 @@ class MyBox extends StatelessWidget {
                 // mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          Text(
-                            title ?? "No Update",
-                            style: TextStyle(
-                              fontFamily: "Gilmer",
-                              fontSize: 22,
-                             fontWeight: FontWeight.w700,
-                              color: Theme.of(context).colorScheme.tertiary,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                          // Spacer(flex: 1),
-                          // IconButton(
-                          //   onPressed: CardPress,
-                          //   icon: Icon(
-                          //     icon as IconData?,
-                          //     color: Theme.of(context).colorScheme.tertiary,
-                          //   ),
-                          // )
-                        ],
+                  Row(
+                    children: [
+                      Text(
+                        title ?? "No Update",
+                        style: TextStyle(
+                          fontFamily: "Gilmer",
+                          fontSize: 22,
+                         fontWeight: FontWeight.w700,
+                          color: Theme.of(context).colorScheme.tertiary,
+                        ),
+                        textAlign: TextAlign.left,
                       ),
-                    ),
+                      // Spacer(flex: 1),
+                      // IconButton(
+                      //   onPressed: CardPress,
+                      //   icon: Icon(
+                      //     icon as IconData?,
+                      //     color: Theme.of(context).colorScheme.tertiary,
+                      //   ),
+                      // )
+                    ],
                   ),
                   const Padding(
                     padding: EdgeInsets.all(2.0),
                   ),
-                  Container(
-                    child: Text(
-                      hint ?? "No Data",
-                      style: TextStyle(
-                        fontFamily: "Gilmer",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Theme.of(context).hintColor,
-                      ),
-                      textAlign: TextAlign.left,
+                  Text(
+                    hint ?? "No Data",
+                    style: TextStyle(
+                      fontFamily: "Gilmer",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).hintColor,
                     ),
+                    textAlign: TextAlign.left,
                   ),
                     const Padding(
                     padding: EdgeInsets.all(2.0),

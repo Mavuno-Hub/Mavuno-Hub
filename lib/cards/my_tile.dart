@@ -4,11 +4,13 @@ import '../styles/pallete.dart';
 
 class MyTile extends StatelessWidget {
   final String? title;
+  final VoidCallback? action;
+  // final Widget Function(BuildContext)? action;
+  const MyTile({super.key, 
 
-  const MyTile({
-    Key? key,
     this.title,
-  }) : super(key: key);
+    this.action
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,72 +56,82 @@ class MyTile extends StatelessWidget {
     //     ),
     //   ),
     // );
-    return Padding(
-      padding: const EdgeInsets.all(6.0),
-      child: Container(
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Row(
-              children: [
-                Text(
-                  title ?? "Tile Title",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontFamily: 'Gilmer',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800),
-                ),
-                const Spacer(
-                  flex: 1,
-                ),
-                Container(
-                    height: 30,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Theme.of(context).colorScheme.tertiary),
-                    child: const Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(6.0),
-                          child: Text(
-                            'Click Here',
-                            style: TextStyle(
-                                fontFamily: 'Gilmer',
-                                fontSize: 12,
-                               fontWeight: FontWeight.w700,
-                                color: AppColor.dark),
-                          ),
-                        )
-                      ],
-                    ))
-                // Center(
-                //   child: Stack(
-                //     children: [
-                //       Container(
-                //         height: 25,
-                //         decoration: BoxDecoration(
-                //             borderRadius: BorderRadius.circular(8),
-                //             color: Theme.of(context).colorScheme.tertiary),
-                //       ),
-                //       const Text(
-                //         'Click Here',
-                //         style: TextStyle(
-                //             fontFamily: 'Gilmer',
-                //             fontSize: 12,
-                //            fontWeight: FontWeight.w700,
-                //             color: AppColor.dark),
-                //       )
-                //     ],
-                //   ),
-                // )
-              ],
+    return GestureDetector(
+  // onTap: () {
+  //           Navigator.of(context).push(MaterialPageRoute(
+  //             builder: (context) => action!(context), // Call the action function
+  //           ));
+  //         },
+  onTap: action,
+      child: Padding(
+        padding: const EdgeInsets.all(6.0),
+        child: Container(
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Theme.of(context).colorScheme.secondary,
             ),
-          )),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Row(
+                children: [
+                  Text(
+                    title ?? "Tile Title",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontFamily: 'Gilmer',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800),
+                  ),
+                  const Spacer(
+                    flex: 1,
+                  ),
+                  Center(
+                    child: Container(
+                        height: 30,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Theme.of(context).colorScheme.tertiary),
+                        child: const Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(6.0),
+                              child: Text(
+                                'Click Here',
+                                style: TextStyle(
+                                    fontFamily: 'Gilmer',
+                                    fontSize: 12,
+                                   fontWeight: FontWeight.w700,
+                                    color: AppColor.dark),
+                              ),
+                            )
+                          ],
+                        )),
+                  )
+                  // Center(
+                  //   child: Stack(
+                  //     children: [
+                  //       Container(
+                  //         height: 25,
+                  //         decoration: BoxDecoration(
+                  //             borderRadius: BorderRadius.circular(8),
+                  //             color: Theme.of(context).colorScheme.tertiary),
+                  //       ),
+                  //       const Text(
+                  //         'Click Here',
+                  //         style: TextStyle(
+                  //             fontFamily: 'Gilmer',
+                  //             fontSize: 12,
+                  //            fontWeight: FontWeight.w700,
+                  //             color: AppColor.dark),
+                  //       )
+                  //     ],
+                  //   ),
+                  // )
+                ],
+              ),
+            )),
+      ),
     );
   }
 }

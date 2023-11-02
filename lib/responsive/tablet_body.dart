@@ -4,7 +4,7 @@ import 'package:mavunohub/cards/my_box.dart';
 import 'package:mavunohub/cards/my_tile.dart';
 
 class TabletScaffold extends StatefulWidget {
-  const TabletScaffold({Key? key}) : super(key: key);
+  const TabletScaffold({super.key});
 
   @override
   State<TabletScaffold> createState() => _TabletScaffoldState();

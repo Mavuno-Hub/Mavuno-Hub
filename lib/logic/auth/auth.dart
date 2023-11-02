@@ -1,5 +1,5 @@
   // void _signUp() async {
-  //   final snacky = SnackBarHelper(context);
+  //   final snacky = snackBarHelper.SnackBarHelper(context);
   //   final String username = _usernameController.text.trim();
   //   final String phone = _phonenumberController.text.trim();
 

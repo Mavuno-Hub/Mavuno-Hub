@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mavunohub/styles/pallete.dart';
 
 class PassWord extends StatefulWidget {
   final String text;
@@ -12,7 +11,7 @@ class PassWord extends StatefulWidget {
   final String? label;
 
   const PassWord({
-    Key? key,
+    super.key,
     required this.text,
     this.hint,
     this.controller,
@@ -22,7 +21,7 @@ class PassWord extends StatefulWidget {
     this.onClicked,
     this.label,
     required String title,
-  }) : super(key: key);
+  });
 
   @override
   State<PassWord> createState() => _FormTextState();

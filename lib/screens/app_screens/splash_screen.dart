@@ -29,9 +29,9 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
     if(role == 'user'){
-      navigateNext(const LogInUser());
+      navigateNext( LogInUser());
     } else if(role == 'admin'){
-      navigateNext(const LogInUser());
+      navigateNext( LogInUser());
     }
   }
 

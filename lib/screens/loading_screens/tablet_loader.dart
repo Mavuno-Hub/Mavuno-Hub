@@ -4,7 +4,7 @@ import '../../cards/my_box.dart';
 import '../../cards/my_tile.dart';
 
 class TabletLoader extends StatefulWidget {
-  const TabletLoader({Key? key}) : super(key: key);
+  const TabletLoader({super.key});
 
   @override
   State<TabletLoader> createState() => _TabletLoaderState();

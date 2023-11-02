@@ -15,7 +15,7 @@ class PhoneField extends StatefulWidget {
   final TextInputType? keyboardType;
 
   const PhoneField({
-    Key? key,
+    super.key,
     required this.text,
     this.hint,
     this.onChanged,
@@ -27,7 +27,7 @@ class PhoneField extends StatefulWidget {
     this.label,
     this.keyboardType,
     required String title,
-  }) : super(key: key);
+  });
 
   @override
   State<PhoneField> createState() => _PhoneFieldState();
@@ -68,18 +68,18 @@ FocusNode focusNode = FocusNode();
                   padding: const EdgeInsets.all(10),
                   child: IntlPhoneField(
                     style: TextStyle(
-                      // textBaseline: TextBaseline.alphabetic,
                       fontFamily: 'Gilmer',
                       fontSize: 14,
                       color: Theme.of(context).colorScheme.onBackground,
                       fontWeight: FontWeight.w700,
                     ),
+                    inputFormatters: const [],
                     textAlignVertical: TextAlignVertical.center,
                     dropdownIcon: Icon(
                       Icons.arrow_drop_down,
                       color: Theme.of(context).colorScheme.tertiary,
                     ),
-
+                    textAlign: TextAlign.start,
                     pickerDialogStyle: PickerDialogStyle(
                       countryCodeStyle: TextStyle(
                         fontFamily: 'Gilmer',
@@ -93,7 +93,7 @@ FocusNode focusNode = FocusNode();
                     searchText: 'Select Country',
                     // showCountryFlag: true,
                     // showDropdownIcon: true,
-                    keyboardType: TextInputType.number,
+                 
                     controller: widget.controller,
                     // validator: widget.validator,
                     // onChanged: widget.onChanged,
@@ -131,7 +131,7 @@ FocusNode focusNode = FocusNode();
                     onChanged: (phone) {
                       print(phone.completeNumber);
                     },onCountryChanged: (country) {
-                    print('Country changed to: ' + country.name);
+                    print('Country changed to: ${country.name}');
                   }, languageCode: "en",focusNode: focusNode,
                     initialCountryCode: 'KE',
                     dropdownTextStyle: Theme.of(context)

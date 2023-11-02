@@ -4,7 +4,7 @@ import '../../cards/my_box.dart';
 import '../../cards/my_tile.dart';
 
 class DesktopLoader extends StatefulWidget {
-  const DesktopLoader({Key? key}) : super(key: key);
+  const DesktopLoader({super.key});
 
   @override
   State<DesktopLoader> createState() => _DesktopLoaderState();

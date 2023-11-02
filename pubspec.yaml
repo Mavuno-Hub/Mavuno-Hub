@@ -1,5 +1,5 @@
 name: mavunohub
-description: A new Flutter project.
+description: A Software Solution for Managing Farm Resources.
 
 version: 1.0.0+1
 
@@ -19,8 +19,10 @@ dependencies:
   firebase_storage: ^11.2.8
   shared_preferences: ^2.2.2
   provider: ^6.0.5
+  intl:
   firebase_core_web:
   firebase_auth_web:
+  change_app_package_name:
   firebase_analytics:
   google_sign_in:
   intl_phone_field: ^3.1.0
@@ -29,6 +31,7 @@ dependencies:
   pin_code_fields: ^8.0.1
   url_launcher: ^6.1.14
   flutter_dialogs: ^3.0.0
+  redacted: ^1.0.11
 dev_dependencies:
   flutter_test:
     sdk: flutter

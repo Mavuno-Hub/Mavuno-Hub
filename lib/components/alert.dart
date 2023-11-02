@@ -12,14 +12,14 @@ class Alert {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title:Text(
-                title,
-                style: TextStyle(
-                    fontFamily: 'Gilmer',
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    color: Theme.of(context).colorScheme.tertiary),
-              ),
+          title: Text(
+            title,
+            style: TextStyle(
+                fontFamily: 'Gilmer',
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.tertiary),
+          ),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -30,12 +30,12 @@ class Alert {
                 style: TextStyle(
                     fontFamily: 'Gilmer',
                     fontWeight: FontWeight.w700,
-                    fontSize: 28,
+                    fontSize: 32,
                     color: Theme.of(context).colorScheme.onBackground),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
                     onPressed: () {
@@ -43,6 +43,7 @@ class Alert {
                       Navigator.of(context).pop();
                     },
                     child: Container(
+                      width: 100,
                       decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.tertiary,
                           borderRadius: BorderRadius.circular(8)),
@@ -50,27 +51,39 @@ class Alert {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'Copy Password',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                               fontFamily: 'Gilmer',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
                               color: Theme.of(context).colorScheme.background),
                         ),
                       ),
                     ),
                   ),
                   TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'Close',
-                        style: TextStyle(
-                            fontFamily: 'Gilmer',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            color: Theme.of(context).colorScheme.tertiary),
-                      )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(24, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Close',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: 'Gilmer',
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                              color: Theme.of(context).colorScheme.tertiary),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],

@@ -5,10 +5,10 @@ class Jina extends StatefulWidget {
   final Color rangi;
 
   const Jina({
-    Key? key,
+    super.key,
     required this.text,
     required this.rangi,
-  }) : super(key: key);
+  });
 
   @override
   State<Jina> createState() => _JinaState();

@@ -13,7 +13,7 @@ class FormText extends StatefulWidget {
   final TextInputType? keyboardType;
 
   const FormText({
-    Key? key,
+    super.key,
     required this.text,
     this.hint,
     this.onChanged,
@@ -25,7 +25,7 @@ class FormText extends StatefulWidget {
     this.label,
     this.keyboardType,
     required String title,
-  }) : super(key: key);
+  });
 
   @override
   State<FormText> createState() => _FormTextState();

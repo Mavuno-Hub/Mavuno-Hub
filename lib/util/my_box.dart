@@ -7,12 +7,12 @@ class MyBox extends StatelessWidget {
   final String? desc;
   final Color? color;
   const MyBox({
-    Key? key,
+    super.key,
     this.title,
     this.desc,
     this.hint,
     this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

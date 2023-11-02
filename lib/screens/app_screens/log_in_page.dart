@@ -291,7 +291,10 @@ class _MobileLogInState extends State<MobileLogIn> {
             MaterialPageRoute(
               builder: (context) => MobileScaffold(username: fetchUsername),
             ),
+            
           );
+          snacky.showSnackBar("Log In Successful",
+          isError: false);
           _usernameController.clear();
           _passwordController.clear();
         } else {

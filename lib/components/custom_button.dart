@@ -61,8 +61,9 @@ class _FormButtonState extends State<FormButton> {
                 if (widget.isLoading)
                   Center(
                     child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.background,
                       valueColor:
-                          AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.secondary),
+                          AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.background),
                     ),
                   ),
               ],

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mavunohub/components/appbar.dart';
+import 'package:mavunohub/styles/pallete.dart';
 import 'package:mavunohub/user_controller.dart';
 
 class Services extends StatefulWidget {
@@ -25,28 +27,32 @@ class _ServicesState extends State<Services> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: const CustomAppBar(title: 'Services'),
         body: CustomScrollView(
           slivers: <Widget>[
-            SliverAppBar(
-              expandedHeight: 10.0,
-              floating: true,
-              pinned: false,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Services',
-                    style: TextStyle(
-                      fontFamily: 'Gilmer',
-                      fontSize: 26,
-                      color: Theme.of(context).colorScheme.tertiary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    textAlign: TextAlign.start,
-                  ),
-                ),
-              ),
-            ),
+            // SliverAppBar(
+            //   expandedHeight: 100.0,
+            //   floating: true,
+            //   pinned: false,
+            //   flexibleSpace: FlexibleSpaceBar(
+            //     title: Align(
+            //       alignment: Alignment.centerLeft,
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(vertical: 25.0),
+            //         child: Text(
+            //           'Services',
+            //           style: TextStyle(
+            //             fontFamily: 'Gilmer',
+            //             fontSize: 26,
+            //             color: Theme.of(context).colorScheme.tertiary,
+            //             fontWeight: FontWeight.w700,
+            //           ),
+            //           textAlign: TextAlign.start,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             SliverToBoxAdapter(
               child: SearchBar(handleSearch: (searchQuery) {
                 // Implement search logic here
@@ -191,13 +197,19 @@ class _ServiceListState extends State<ServiceList> {
   Widget build(BuildContext context) {
     if (isLoading) {
       // Display a loading indicator while data is being fetched.
-      return Center(
-        child: CircularProgressIndicator(),
+      return Container(
+        height: 400,
+        child: const Center(
+          child: CircularProgressIndicator(color: AppColor.yellow),
+        ),
       );
     } else if (services.isEmpty) {
       // Display "No Service Added" message when the 'farm_setup' collection is empty or doesn't exist.
-      return Center(
-        child: Text("No Service Added"),
+      return Container(
+        height: 200,
+        child: Center(
+          child: Text("No Service Added"),
+        ),
       );
     }
 
@@ -239,7 +251,7 @@ class _ServiceListState extends State<ServiceList> {
     final dateFormat = DateFormat('MMM d, y'); // Customize the format as needed
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(1.0),
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(

@@ -53,10 +53,24 @@
               child: Column(
                 children: [
 
-                  Container(
-                    child: Text(
-                    'Hello ${widget.username}',
-                    )
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0).add(const EdgeInsets.symmetric(vertical: 10)),
+                      child: SizedBox(
+                        height: 25,
+                        child: Text(
+                        'Welcome ${widget.username}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'Gilmer',
+                            fontSize: 26,
+                            color: Theme.of(context).colorScheme.onBackground,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        )
+                      ),
+                    ),
                   ),
                   // First 4 boxes in a row
                   Container(

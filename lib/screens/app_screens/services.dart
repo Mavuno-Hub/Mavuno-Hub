@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:mavunohub/user_controller.dart';
 
 class Services extends StatefulWidget {
   const Services({Key? key}) : super(key: key);
@@ -9,44 +12,72 @@ class Services extends StatefulWidget {
 }
 
 class _ServicesState extends State<Services> {
-  final CollectionReference farmSetupCollection =
-      FirebaseFirestore.instance.collection('farm_setup');
+  final UserController userController = Get.find<UserController>();
+
+  @override
+  void initState() {
+    super.initState();
+    userController.fetchUserDataFromFirestore();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            expandedHeight: 150.0,
-            floating: true,
-            pinned: false,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                'Services',
-                style: TextStyle(
-                  fontFamily: 'Gilmer',
-                  fontSize: 20,
-                  color: Theme.of(context).colorScheme.tertiary,
-                  fontWeight: FontWeight.w700,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              expandedHeight: 10.0,
+              floating: true,
+              pinned: false,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Services',
+                    style: TextStyle(
+                      fontFamily: 'Gilmer',
+                      fontSize: 26,
+                      color: Theme.of(context).colorScheme.tertiary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
                 ),
-                textAlign: TextAlign.start,
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: SearchBar(handleSearch: (searchQuery) {
-              // Implement search logic here
-              // You can use searchQuery to filter Firestore data
-              // For example, you can call fetchDataFromFirestore(searchQuery)
-              // and update the data based on search results.
-            }),
-          ),
-          SliverToBoxAdapter(
-            child: ServiceList(),
-          ),
-        ],
+            SliverToBoxAdapter(
+              child: SearchBar(handleSearch: (searchQuery) {
+                // Implement search logic here
+                // You can use searchQuery to filter Firestore data
+                // For example, you can call fetchDataFromFirestore(searchQuery)
+                // and update the data based on search results.
+              }),
+            ),
+            // Use the UserController to retrieve the user's username
+            SliverToBoxAdapter(
+              child: FutureBuilder<String>(
+                future: userController.getUsername(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    final username = snapshot.data;
+                    if (username != null) {
+                      // Pass the username to the ServiceList
+                      return ServiceList(username: username);
+                    } else {
+                      // Handle the case where username is null (e.g., user not authenticated)
+                      return Text('User not authenticated');
+                    }
+                  } else {
+                    // Loading indicator while fetching username
+                    return CircularProgressIndicator();
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -120,12 +151,20 @@ class SearchBar extends StatelessWidget {
 }
 
 class ServiceList extends StatefulWidget {
-  @override
-  _ServiceListState createState() => _ServiceListState();
-}
+  final String username;
 
+  ServiceList({required this.username});
+
+  @override
+  _ServiceListState createState() => _ServiceListState(username: username);
+}
 class _ServiceListState extends State<ServiceList> {
+  final String username;
   List<QueryDocumentSnapshot> services = [];
+
+  _ServiceListState({required this.username});
+
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -134,24 +173,35 @@ class _ServiceListState extends State<ServiceList> {
   }
 
   Future<void> loadServices() async {
-    // Load the first 10 services from Firestore
+    // Load the first 10 services from the 'farm_setup' subcollection of a specific user
     final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(username)
         .collection('farm_setup')
-        // .orderBy('createdAt')
         .limit(10)
         .get();
+
     setState(() {
       services = querySnapshot.docs;
+      isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (services.isEmpty) {
-      // Loading indicator or error message
-      return CircularProgressIndicator();
+    if (isLoading) {
+      // Display a loading indicator while data is being fetched.
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (services.isEmpty) {
+      // Display "No Service Added" message when the 'farm_setup' collection is empty or doesn't exist.
+      return Center(
+        child: Text("No Service Added"),
+      );
     }
 
+    // Build and return the ListView with service data.
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -168,9 +218,7 @@ class _ServiceListState extends State<ServiceList> {
       },
     );
   }
-}
-
-class ViewData extends StatelessWidget {
+}class ViewData extends StatelessWidget {
   final String service;
   final String condition;
   final int duration;
@@ -187,76 +235,80 @@ class ViewData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   return Padding(
-  padding: const EdgeInsets.all(8.0),
-  child: Card(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8.0),
-   ),
-    color: Theme.of(context).colorScheme.secondary,
-    child: ExpansionTile(
-       shape: Border(),
-      title: Text(
-        service,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.tertiary,
-          fontFamily: 'Gilmer',
-          fontWeight: FontWeight.w700,
-          fontSize: 16,
-        ),
-      ),
-      subtitle: Text(
-        'condition: ' + condition,
-        style: TextStyle(
-          color: Theme.of(context).hintColor,
-          fontFamily: 'Gilmer',
-          fontWeight: FontWeight.w700,
-          fontSize: 10,
-        ),
-      ),
-      trailing: Text(
-        'Duration: $duration days',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onBackground,
-          fontFamily: 'Gilmer',
-          fontWeight: FontWeight.w700,
-          fontSize: 12,
-        ),
-      ),
-      children: <Widget>[
-       Padding(
-         padding: const EdgeInsets.all(8.0),
-         child: Align(
-          alignment: Alignment.topLeft,
-           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-             Text(
-              'Additional content here',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onBackground,
-                fontFamily: 'Gilmer',
-                fontWeight: FontWeight.w700,
-                fontSize: 12,
-              ),
-            ),
-            Text(
-              'More additional content',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onBackground,
-                fontFamily: 'Gilmer',
-                fontWeight: FontWeight.w700,
-                fontSize: 12,
-              ),
-            ),
-           ],),
-         ),
-       )
-      ],
-    ),
-  ),
-);
+    // Define a date format
+    final dateFormat = DateFormat('MMM d, y'); // Customize the format as needed
 
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        color: Theme.of(context).colorScheme.secondary,
+        child: ExpansionTile(
+          shape: Border(),
+          title: Text(
+            service,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.tertiary,
+              fontFamily: 'Gilmer',
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+            ),
+          ),
+          subtitle: Text(
+            'condition: ' + condition,
+            style: TextStyle(
+              color: Theme.of(context).hintColor,
+              fontFamily: 'Gilmer',
+              fontWeight: FontWeight.w700,
+              fontSize: 10,
+            ),
+          ),
+          trailing: Text(
+            'Duration: $duration days',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onBackground,
+              fontFamily: 'Gilmer',
+              fontWeight: FontWeight.w700,
+              fontSize: 12,
+            ),
+          ),
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Start Date:       ${dateFormat.format(startDate)}',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontFamily: 'Gilmer',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      'End Date:      ${dateFormat.format(endDate)}',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontFamily: 'Gilmer',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -260,51 +260,49 @@ class _MobileLogInState extends State<MobileLogIn> {
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final UserController userController = Get.find(); // Access the UserController
-void login() async {
-  final String identifier = _usernameController.text?.trim() ?? '';
-  final String password = _passwordController.text?.trim() ?? '';
-  SnackBarHelper snacky = SnackBarHelper(context);
+  void login() async {
+    final String identifier = _usernameController.text?.trim() ?? '';
+    final String password = _passwordController.text?.trim() ?? '';
+    SnackBarHelper snacky = SnackBarHelper(context);
 
-  if (password.isEmpty || identifier.isEmpty) {
-    snacky.showSnackBar("Please Enter Both Username and Password", isError: true);
-    return;
-  } else {
-    try {
-      final usersQuery = await FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isEqualTo: identifier)
-          .where('password', isEqualTo: password)
-          .get();
+    if (password.isEmpty || identifier.isEmpty) {
+      snacky.showSnackBar("Please Enter Both Username and Password",
+          isError: true);
+      return;
+    } else {
+      try {
+        final usersQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('username', isEqualTo: identifier)
+            .where('password', isEqualTo: password)
+            .get();
 
-      if (usersQuery.docs.isNotEmpty) {
-        final userData = usersQuery.docs.first.data() as Map<String, dynamic>;
-        final fetchUsername = userData['username']?.split(' ')[0] ?? '';
-        final newEmail = userData['email'] ?? '';
+        if (usersQuery.docs.isNotEmpty) {
+          final userData = usersQuery.docs.first.data() as Map<String, dynamic>;
+          final fetchUsername = userData['username']?.split(' ')[0] ?? '';
+          final newEmail = userData['email'] ?? '';
 
-        // Update the UserController with user data
-        userController.updateUserData(fetchUsername, newEmail);
-        userController.fetchUserDataFromFirestore();
+          // Update the UserController with user data
+          userController.updateUserData(fetchUsername, newEmail);
+          userController.fetchUserDataFromFirestore();
 
-        // Successfully logged in, navigate to the dashboard
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => MobileScaffold(username: fetchUsername),
-          ),
-        );
-        _usernameController.clear();
-        _passwordController.clear();
-      } else {
-        // No matching user found with the provided credentials
-        snacky.showSnackBar("Invalid Login Details", isError: true);
+          // Successfully logged in, navigate to the dashboard
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MobileScaffold(username: fetchUsername),
+            ),
+          );
+          _usernameController.clear();
+          _passwordController.clear();
+        } else {
+          // No matching user found with the provided credentials
+          snacky.showSnackBar("Invalid Login Details", isError: true);
+        }
+      } on FirebaseException catch (e) {
+        snacky.showSnackBar(e.toString(), isError: true);
       }
-    } on FirebaseException catch (e) {
-      snacky.showSnackBar(e.toString(), isError: true);
     }
   }
-}
-  
-
-
 
   @override
   Widget build(BuildContext context) {

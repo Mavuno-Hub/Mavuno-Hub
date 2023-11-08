@@ -11,8 +11,6 @@ import 'package:mavunohub/screens/app_screens/add_assets.dart';
 import 'package:mavunohub/user_controller.dart';
 import 'package:mavunohub/util/list.dart';
 
-import 'package:mavunohub/logic/services/data_manager.dart';
-
 class FarmSetup extends StatefulWidget {
   const FarmSetup({Key? key});
 
@@ -48,11 +46,19 @@ Future<void> saveFormDataToFirestore() async {
   String service = _services.text.toString();
   final UserController userController = Get.find();
 
-  if (condition.isEmpty || duration.isEmpty || service.isEmpty) {
+   if (condition.isEmpty || duration.isEmpty || service.isEmpty) {
     snacky.showSnackBar("Please fill in all fields", isError: true);
     return;
   }
 
+  int conditionValue;
+  if (int.tryParse(condition) is int) {
+    conditionValue = int.parse(condition);
+    if (conditionValue < 1 || conditionValue > 10) {
+      snacky.showSnackBar("Condition should be a number between 1 and 10", isError: true);
+      return;
+    }
+  }
   String username = userController.username.value;
 
   if (username == null || username.isEmpty) {

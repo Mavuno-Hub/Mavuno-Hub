@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/app_screens/services.dart';
 import 'navrouter.dart';
 import 'text.dart';
 
@@ -41,7 +42,11 @@ class _IconMenuState extends State<IconMenu> {
                     buildMenuItem(
                         text: 'Services',
                         icon: Icons.room_service,
-                        onClicked: () => Navigator.pop(context)),
+                        onClicked: () {
+                           Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const Services(),
+                              ));
+                        }),
                     //  onClicked: () => Navigator.of(context).pop()),
 
                     buildMenuItem(

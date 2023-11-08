@@ -28,61 +28,64 @@ class _ServicesState extends State<Services> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: const CustomAppBar(title: 'Services'),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            // SliverAppBar(
-            //   expandedHeight: 100.0,
-            //   floating: true,
-            //   pinned: false,
-            //   flexibleSpace: FlexibleSpaceBar(
-            //     title: Align(
-            //       alignment: Alignment.centerLeft,
-            //       child: Padding(
-            //         padding: const EdgeInsets.symmetric(vertical: 25.0),
-            //         child: Text(
-            //           'Services',
-            //           style: TextStyle(
-            //             fontFamily: 'Gilmer',
-            //             fontSize: 26,
-            //             color: Theme.of(context).colorScheme.tertiary,
-            //             fontWeight: FontWeight.w700,
-            //           ),
-            //           textAlign: TextAlign.start,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            SliverToBoxAdapter(
-              child: SearchBar(handleSearch: (searchQuery) {
-                // Implement search logic here
-                // You can use searchQuery to filter Firestore data
-                // For example, you can call fetchDataFromFirestore(searchQuery)
-                // and update the data based on search results.
-              }),
-            ),
-            // Use the UserController to retrieve the user's username
-            SliverToBoxAdapter(
-              child: FutureBuilder<String>(
-                future: userController.getUsername(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    final username = snapshot.data;
-                    if (username != null) {
-                      // Pass the username to the ServiceList
-                      return ServiceList(username: username);
-                    } else {
-                      // Handle the case where username is null (e.g., user not authenticated)
-                      return Text('User not authenticated');
-                    }
-                  } else {
-                    // Loading indicator while fetching username
-                    return CircularProgressIndicator();
-                  }
-                },
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: CustomScrollView(
+            slivers: <Widget>[
+              // SliverAppBar(
+              //   expandedHeight: 100.0,
+              //   floating: true,
+              //   pinned: false,
+              //   flexibleSpace: FlexibleSpaceBar(
+              //     title: Align(
+              //       alignment: Alignment.centerLeft,
+              //       child: Padding(
+              //         padding: const EdgeInsets.symmetric(vertical: 25.0),
+              //         child: Text(
+              //           'Services',
+              //           style: TextStyle(
+              //             fontFamily: 'Gilmer',
+              //             fontSize: 26,
+              //             color: Theme.of(context).colorScheme.tertiary,
+              //             fontWeight: FontWeight.w700,
+              //           ),
+              //           textAlign: TextAlign.start,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              SliverToBoxAdapter(
+                child: SearchBar(handleSearch: (searchQuery) {
+                  // Implement search logic here
+                  // You can use searchQuery to filter Firestore data
+                  // For example, you can call fetchDataFromFirestore(searchQuery)
+                  // and update the data based on search results.
+                }),
               ),
-            ),
-          ],
+              // Use the UserController to retrieve the user's username
+              SliverToBoxAdapter(
+                child: FutureBuilder<String>(
+                  future: userController.getUsername(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      final username = snapshot.data;
+                      if (username != null) {
+                        // Pass the username to the ServiceList
+                        return ServiceList(username: username);
+                      } else {
+                        // Handle the case where username is null (e.g., user not authenticated)
+                        return Text('User not authenticated');
+                      }
+                    } else {
+                      // Loading indicator while fetching username
+                      return CircularProgressIndicator();
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -164,6 +167,7 @@ class ServiceList extends StatefulWidget {
   @override
   _ServiceListState createState() => _ServiceListState(username: username);
 }
+
 class _ServiceListState extends State<ServiceList> {
   final String username;
   List<QueryDocumentSnapshot> services = [];
@@ -171,7 +175,7 @@ class _ServiceListState extends State<ServiceList> {
   _ServiceListState({required this.username});
 
   bool isLoading = true;
-
+  final UserController userController = Get.find();
   @override
   void initState() {
     super.initState();
@@ -179,18 +183,47 @@ class _ServiceListState extends State<ServiceList> {
   }
 
   Future<void> loadServices() async {
-    // Load the first 10 services from the 'farm_setup' subcollection of a specific user
-    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(username)
-        .collection('farm_setup')
-        .limit(10)
-        .get();
+    try {
+      // final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(username)
+      //     .collection('farm_setup')
+      //     .limit(10)
+      //     .get();
+      final QuerySnapshot userQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .get();
 
-    setState(() {
-      services = querySnapshot.docs;
-      isLoading = false;
-    });
+      String userDocId = userQuery.docs.first.id;
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userDocId)
+          .collection('farm_setup')
+          // .orderBy('date',
+          //     descending: true) // Order by 'date' in descending order
+          .limit(10)
+          .get();
+
+      setState(() {
+        services = querySnapshot.docs;
+        isLoading = false;
+      });
+
+//  if(querySnapshot.docs.isNotEmpty){
+// String userDocId = querySnapshot.docs.first.id;
+
+//       // Create a reference to the 'farm_setup' subcollection
+//       CollectionReference farmSetupCollection = FirebaseFirestore.instance
+//           .collection('users')
+//           .doc(userDocId)
+//           .collection('farm_setup');
+
+//  }
+    } catch (e) {
+      print(e);
+    }
+    // Load the first 10 services from the 'farm_setup' subcollection of a specific user
   }
 
   @override
@@ -230,7 +263,9 @@ class _ServiceListState extends State<ServiceList> {
       },
     );
   }
-}class ViewData extends StatelessWidget {
+}
+
+class ViewData extends StatelessWidget {
   final String service;
   final String condition;
   final int duration;

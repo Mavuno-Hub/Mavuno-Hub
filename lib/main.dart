@@ -9,7 +9,7 @@ import 'package:mavunohub/screens/app_screens/log_in_page.dart';
 import 'package:mavunohub/user_controller.dart';
 import 'styles/theme/dark_theme.dart';
 import 'styles/theme/light_theme.dart';
-
+// import 'dart:io';
 import 'package:provider/provider.dart';
 // import 'package:firebase_core/firebase_core';
 
@@ -36,6 +36,19 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+// For enabling Firebase Emulator Tool
+  //
+//   @override
+// void initState(){
+//   String host = Platform.isAndroid ? '10.0.2.2:8080' : 'localhost:8080';
+
+//   Firebase.instance.settings(
+//     host: host,
+//     sslEnabled: false,
+//     persistenceEnabled: false,
+//   );
+//   // super.initState();
+// }
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -58,8 +71,8 @@ class MyApp extends StatelessWidget {
         //   tabletBody: TabletScaffold(),
         //   desktopBody: DesktopScaffold(),
         // ),
-        home:  LogInUser (),
-         initialBinding: UserBindings(),
+        home: LogInUser(),
+        initialBinding: UserBindings(),
       ),
     );
   }

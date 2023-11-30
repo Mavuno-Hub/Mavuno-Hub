@@ -6,6 +6,7 @@ import 'package:mavunohub/logic/auth/auth_service.dart';
 import 'package:mavunohub/firebase_options.dart';
 import 'package:mavunohub/responsive/mobile_body.dart';
 import 'package:mavunohub/screens/app_screens/log_in_page.dart';
+import 'package:mavunohub/screens/app_screens/news.dart';
 import 'package:mavunohub/user_controller.dart';
 import 'styles/theme/dark_theme.dart';
 import 'styles/theme/light_theme.dart';
@@ -30,7 +31,7 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  runApp(const MyApp());
+  runApp(const   MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -66,12 +67,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
         darkTheme: darkTheme,
-        // home: const ResponsiveLayout(
-        //   mobileBody: MobileScaffold(),
-        //   tabletBody: TabletScaffold(),
-        //   desktopBody: DesktopScaffold(),
-        // ),
-        home: LogInUser(),
+        home: const LogInUser(),
         initialBinding: UserBindings(),
       ),
     );

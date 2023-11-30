@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/app_screens/services.dart';
+import '../screens/app_screens/news.dart';
 import 'navrouter.dart';
 import 'text.dart';
 
@@ -64,6 +65,15 @@ class _IconMenuState extends State<IconMenu> {
                       icon: Icons.assessment,
                       onClicked: () => selectedItem(context, 3),
                     ),
+                    buildMenuItem(
+                      text: 'News',
+                      icon: Icons.newspaper_rounded,
+                      onClicked: () {
+                           Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>  News(),
+                              ));
+                        }),
+                    
                     buildMenuItem(
                       text: 'Settings',
                       icon: Icons.monetization_on,

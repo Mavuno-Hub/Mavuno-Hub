@@ -20,6 +20,7 @@ dependencies:
   shared_preferences: ^2.2.2
   provider: ^6.0.5
   intl:
+  http:
   firebase_core_web:
   firebase_auth_web:
   change_app_package_name:
@@ -32,12 +33,17 @@ dependencies:
   url_launcher: ^6.1.14
   flutter_dialogs: ^3.0.0
   redacted: ^1.0.11
+  dio: ^5.3.3
+  freezed: ^2.4.5
+  cached_network_image: ^3.3.0
+  freezed_annotation: ^2.4.1
+  flutter_riverpod: ^2.4.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.13.1"
   flutter_lints: ^3.0.0
-  build_runner: ^2.4.0
+  build_runner: any
   build_web_compilers: ^4.0.4
 flutter_icons:
   android: "launcher_icon"
@@ -53,7 +59,6 @@ flutter:
     - assets/mavunohub_icon.png        
     - assets/mavunomark.png   
     - assets/holding-phone.png   
-
   fonts:
     - family: Gilmer
       fonts:

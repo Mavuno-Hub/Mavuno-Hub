@@ -39,6 +39,34 @@ const List<String> services = [
   'Livestock Heath & Nutrition',
 ];
 
+const List<String> assets = [
+  'Tractor',
+  'Plow',
+  'Harvester',
+  'Seeder',
+  'Sprayer',
+  'Tiller',
+  'Combine',
+  'Cultivator',
+  'Loader',
+  'Backhoe',
+  'Trailer',
+  'Milking Machine',
+  'Chainsaw',
+  'Generator',
+  'Pumps',
+  'Fertilizer Spreader',
+  'Livestock Trailer',
+  'Greenhouse',
+  'Irrigation System',
+  'Storage Tanks',
+  'Mowers',
+  'Threshers',
+  'Baler',
+  'Grain Dryer',
+];
+
+
 ///
 ///
 ///

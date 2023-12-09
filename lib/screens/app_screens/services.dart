@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mavunohub/components/appbar.dart';
+import 'package:mavunohub/responsive/mobile_body.dart';
+import 'package:mavunohub/screens/app_screens/news.dart';
 import 'package:mavunohub/styles/pallete.dart';
 import 'package:mavunohub/user_controller.dart';
 
@@ -28,63 +30,68 @@ class _ServicesState extends State<Services> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: const CustomAppBar(title: 'Services'),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: CustomScrollView(
-            slivers: <Widget>[
-              // SliverAppBar(
-              //   expandedHeight: 100.0,
-              //   floating: true,
-              //   pinned: false,
-              //   flexibleSpace: FlexibleSpaceBar(
-              //     title: Align(
-              //       alignment: Alignment.centerLeft,
-              //       child: Padding(
-              //         padding: const EdgeInsets.symmetric(vertical: 25.0),
-              //         child: Text(
-              //           'Services',
-              //           style: TextStyle(
-              //             fontFamily: 'Gilmer',
-              //             fontSize: 26,
-              //             color: Theme.of(context).colorScheme.tertiary,
-              //             fontWeight: FontWeight.w700,
-              //           ),
-              //           textAlign: TextAlign.start,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              SliverToBoxAdapter(
-                child: SearchBar(handleSearch: (searchQuery) {
-                  // Implement search logic here
-                  // You can use searchQuery to filter Firestore data
-                  // For example, you can call fetchDataFromFirestore(searchQuery)
-                  // and update the data based on search results.
-                }),
+        body: Center(
+          child: SizedBox(
+            width: 420,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  // SliverAppBar(
+                  //   expandedHeight: 100.0,
+                  //   floating: true,
+                  //   pinned: false,
+                  //   flexibleSpace: FlexibleSpaceBar(
+                  //     title: Align(
+                  //       alignment: Alignment.centerLeft,
+                  //       child: Padding(
+                  //         padding: const EdgeInsets.symmetric(vertical: 25.0),
+                  //         child: Text(
+                  //           'Services',
+                  //           style: TextStyle(
+                  //             fontFamily: 'Gilmer',
+                  //             fontSize: 26,
+                  //             color: Theme.of(context).colorScheme.tertiary,
+                  //             fontWeight: FontWeight.w700,
+                  //           ),
+                  //           textAlign: TextAlign.start,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  SliverToBoxAdapter(
+                    child: SearchBar(handleSearch: (searchQuery) {
+                      // Implement search logic here
+                      // You can use searchQuery to filter Firestore data
+                      // For example, you can call fetchDataFromFirestore(searchQuery)
+                      // and update the data based on search results.
+                    }),
+                  ),
+                  // Use the UserController to retrieve the user's username
+                  SliverToBoxAdapter(
+                    child: FutureBuilder<String>(
+                      future: userController.getUsername(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          final username = snapshot.data;
+                          if (username != null) {
+                            // Pass the username to the ServiceList
+                            return ServiceList(username: username);
+                          } else {
+                            // Handle the case where username is null (e.g., user not authenticated)
+                            return Text('User not authenticated');
+                          }
+                        } else {
+                          // Loading indicator while fetching username
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
-              // Use the UserController to retrieve the user's username
-              SliverToBoxAdapter(
-                child: FutureBuilder<String>(
-                  future: userController.getUsername(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      final username = snapshot.data;
-                      if (username != null) {
-                        // Pass the username to the ServiceList
-                        return ServiceList(username: username);
-                      } else {
-                        // Handle the case where username is null (e.g., user not authenticated)
-                        return Text('User not authenticated');
-                      }
-                    } else {
-                      // Loading indicator while fetching username
-                      return CircularProgressIndicator();
-                    }
-                  },
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -240,7 +247,7 @@ class _ServiceListState extends State<ServiceList> {
       // Display "No Service Added" message when the 'farm_setup' collection is empty or doesn't exist.
       return Container(
         height: 200,
-        child: Center(
+        child: const Center(
           child: Text("No Service Added"),
         ),
       );
@@ -294,32 +301,159 @@ class ViewData extends StatelessWidget {
         ),
         color: Theme.of(context).colorScheme.secondary,
         child: ExpansionTile(
-          shape: Border(),
+          shape: Border(),  
           title: Text(
             service,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.tertiary,
-              fontFamily: 'Gilmer',
-              fontWeight: FontWeight.w700,
-              fontSize: 16,
-            ),
-          ),
-          subtitle: Text(
-            'condition: ' + condition,
-            style: TextStyle(
-              color: Theme.of(context).hintColor,
-              fontFamily: 'Gilmer',
-              fontWeight: FontWeight.w700,
-              fontSize: 10,
-            ),
-          ),
-          trailing: Text(
-            'Duration: $duration days',
             style: TextStyle(
               color: Theme.of(context).colorScheme.onBackground,
               fontFamily: 'Gilmer',
               fontWeight: FontWeight.w700,
-              fontSize: 12,
+              fontSize: 15,
+            ),
+          ),
+          // subtitle: Text(
+          //   'condition: ' + condition,
+          //   style: TextStyle(
+          //     color: Theme.of(context).hintColor,
+          //     fontFamily: 'Gilmer',
+          //     fontWeight: FontWeight.w700,
+          //     fontSize: 10,
+          //   ),
+          // ),
+         subtitle: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColor.valid.withOpacity(0.05)),
+           child: Padding(
+             padding: const EdgeInsets.all(3.0),
+             child: Center(
+               child: Row(
+                 children: [
+                   Text(
+                     ' Status:',
+                     style: TextStyle(
+                       color: Theme.of(context).colorScheme.onBackground,
+                       fontFamily: 'Gilmer',
+                       fontWeight: FontWeight.w700,
+                       fontSize: 12,
+                       
+                     ),
+                   ),
+                   const Text(
+                     ' Online',
+                     style: TextStyle(
+                       color: AppColor.valid,
+                       fontFamily: 'Gilmer',
+                       fontWeight: FontWeight.w700,
+                       fontSize: 12,
+                     
+                     ),
+                   ),
+                 ],
+               ),
+             ),
+           ),
+         ),
+
+          trailing: SizedBox(
+            width: 150,
+            child: Center(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        height: 15,
+                        child: Row(
+                          children: [
+                            Text(
+                              'Last Changed:',
+                              style: TextStyle(
+                                color: Theme.of(context).hintColor,
+                                fontFamily: 'Gilmer',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                            ),
+                            // Text(
+                            //   '$duration',
+                            //   style: TextStyle(
+                            //     color: Theme.of(context).colorScheme.tertiary,
+                            //     fontFamily: 'Gilmer',
+                            //     fontWeight: FontWeight.w700,
+                            //     fontSize: 12,
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 15,
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            Text(
+                              ' ${dateFormat.format(startDate)}',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary,
+                                fontFamily: 'Gilmer',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                            ),
+                            // Text(
+                            //   ' $condition',
+                            //   style: TextStyle(
+                            //     color: Theme.of(context).colorScheme.tertiary,
+                            //     fontFamily: 'Gilmer',
+                            //     fontWeight: FontWeight.w700,
+                            //     fontSize: 12,
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(flex: 1),
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MobileScaffold()));
+                    },
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 3.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0).add(EdgeInsets.symmetric(horizontal: 8)),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'More',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.background,
+                                    fontFamily: 'Gilmer',
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                // Icon(Icons.arrow_right, color: Theme.of(context).colorScheme.background,size: 15,)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           children: <Widget>[

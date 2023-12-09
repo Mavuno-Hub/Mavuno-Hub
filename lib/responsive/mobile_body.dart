@@ -6,7 +6,7 @@
   import 'package:mavunohub/components/drawer.dart';
   import 'package:mavunohub/cards/my_box.dart';
   import 'package:mavunohub/cards/my_tile.dart';
-  import 'package:mavunohub/screens/app_screens/farm_setup.dart';
+  import 'package:mavunohub/screens/app_screens/services.dart';
 
   import '../cards/updates&events.dart';
   import '../screens/app_screens/services.dart';

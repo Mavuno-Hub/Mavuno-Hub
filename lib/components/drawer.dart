@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mavunohub/screens/app_screens/assets.dart';
 import '../screens/app_screens/services.dart';
 import '../screens/app_screens/news.dart';
 import 'navrouter.dart';
@@ -53,7 +54,11 @@ class _IconMenuState extends State<IconMenu> {
                     buildMenuItem(
                       text: 'Assets',
                       icon: Icons.sell_rounded,
-                      onClicked: () => selectedItem(context, 0),
+                       onClicked: () {
+                           Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const Assets(),
+                              ));
+                        }
                     ),
                     buildMenuItem(
                       text: 'To-Dos',

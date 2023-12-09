@@ -28,10 +28,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Image.asset("assets/mavunohub_icon.png",width: 25,),
           iconSize: 35,
-          // onPressed: (){
-          //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ))
-          // },
-          onPressed: onClickedHome,
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+          // onPressed: onClickedHome,
         ),
         const Padding(padding: EdgeInsets.all(10)),
       ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mavunohub/screens/app_screens/add_assets.dart';
+import 'package:mavunohub/screens/app_screens/add_service.dart';
 import 'package:mavunohub/screens/app_screens/farm_setup.dart';
 import 'package:mavunohub/styles/pallete.dart';
 
@@ -37,7 +38,7 @@ class SnackBarHelper {
                   "Add Service",
                   () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const FarmSetup(),
+                      builder: (context) => const AddService(),
                     ));
                   },
                 ),

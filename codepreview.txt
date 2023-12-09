@@ -1,36 +1,15 @@
-String generatePassword() {
-  final String capitalLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  final String smallLetters = 'abcdefghijklmnopqrstuvwxyz';
-  final String specialCharacters = '!@#\$%^&*()_-+=<>?';
-  final String numbers = '0123456789';
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+admin.initializeApp();
 
-  final String passwordString =
-      '$capitalLetters$smallLetters$specialCharacters$numbers';
+exports.setDefaultStatus = functions.firestore
+    .document('users/{userId}/farm setup/{setupId}')
+    .onCreate((snapshot, context) => {
+        const status = 'Online'; // Default status
 
-  final random = Random.secure();
+        const { userId, setupId } = context.params;
 
+        const setupRef = admin.firestore().collection('users').doc(userId).collection('farm setup').doc(setupId);
 
-  final capitalLetter = capitalLetters[random.nextInt(capitalLetters.length)];
-  final smallLetter = smallLetters[random.nextInt(smallLetters.length)];
-  final specialCharacter = specialCharacters[random.nextInt(specialCharacters.length)];
-  final numbersList = List.generate(7, (index) {
-    final randomIndex = random.nextInt(numbers.length);
-    return numbers[randomIndex];
-  });
-
-  numbersList.shuffle(random);
-
-  final passwordComponents =<String>[capitalLetter, smallLetter, specialCharacter, ...numbersList];
-  passwordComponents.shuffle(random);
-
-  final password = passwordComponents.join(); 
-
-  return password;
-}
-
-void main() {
-  final password = generatePassword();
-  print('Generated Password: $password');
-}
-
-
+        return setupRef.update({ status }); // Set default 'status' field for new documents
+    });

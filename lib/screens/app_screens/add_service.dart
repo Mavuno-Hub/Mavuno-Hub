@@ -9,14 +9,14 @@ import 'package:mavunohub/components/snacky.dart';
 import 'package:mavunohub/user_controller.dart';
 import 'package:mavunohub/util/list.dart';
 
-class AddAsset extends StatefulWidget {
-  const AddAsset({Key? key});
+class AddService extends StatefulWidget {
+  const AddService({Key? key});
 
   @override
   _FarmSetupState createState() => _FarmSetupState();
 }
 
-class _FarmSetupState extends State<AddAsset> {
+class _FarmSetupState extends State<AddService> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _services = TextEditingController();
   final TextEditingController _condition = TextEditingController();
@@ -41,7 +41,7 @@ Future<void> saveFormDataToFirestore() async {
   final snacky = SnackBarHelper(context);
   String condition = _condition.text.toString();
   String duration = _duration.text.toString();
-  String asset = _services.text.toString();
+  String service = _services.text.toString();
   final UserController userController = Get.find();
 
 
@@ -59,7 +59,7 @@ Future<void> saveFormDataToFirestore() async {
     snacky.showSnackBar("Username is invalid", isError: true);
     return;
   }
-   if (condition.isEmpty || duration.isEmpty || asset.isEmpty) {
+   if (condition.isEmpty || duration.isEmpty || service.isEmpty) {
     snacky.showSnackBar("Please fill in all fields", isError: true);
     return;
   }try {
@@ -74,11 +74,11 @@ Future<void> saveFormDataToFirestore() async {
       CollectionReference farmSetupCollection = FirebaseFirestore.instance
           .collection('users')
           .doc(userDocId)
-          .collection('assets');
+          .collection('services');
 
-      // Check if the asset already exists for this user
+      // Check if the service already exists for this user
       QuerySnapshot serviceQuery = await farmSetupCollection
-          .where('asset', isEqualTo: _services.text)
+          .where('service', isEqualTo: _services.text)
           .get();
 
       if (serviceQuery.docs.isNotEmpty) {
@@ -87,7 +87,7 @@ Future<void> saveFormDataToFirestore() async {
       } else {
         // Service does not exist, add it to the collection
         await farmSetupCollection.add({
-          'asset': _services.text,
+          'service': _services.text,
           'condition': _condition.text,
           'duration': _duration.text,
           'start': selectedStartDate,
@@ -134,7 +134,7 @@ Future<void> saveFormDataToFirestore() async {
                     ),
                     FormDropDown(
                       text: 'Select Service',
-                      list: assets,
+                      list: services,
                       controller: _services,
                     ),
                     const Subtitle(

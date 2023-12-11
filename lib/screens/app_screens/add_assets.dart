@@ -172,7 +172,7 @@ Future<void> saveFormDataToFirestore() async {
                               }
                             },
                             child: Container(
-                              width: 150,
+                              width: 300,
                               height: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
@@ -192,28 +192,28 @@ Future<void> saveFormDataToFirestore() async {
                               ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              width: 150,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Redo',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18,
-                                    color:
-                                        Theme.of(context).colorScheme.tertiary,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          // GestureDetector(
+                          //   onTap: () {},
+                          //   child: Container(
+                          //     width: 150,
+                          //     height: 40,
+                          //     decoration: BoxDecoration(
+                          //       borderRadius: BorderRadius.circular(8),
+                          //       color: Theme.of(context).colorScheme.secondary,
+                          //     ),
+                          //     child: Center(
+                          //       child: Text(
+                          //         'Redo',
+                          //         style: TextStyle(
+                          //           fontWeight: FontWeight.w700,
+                          //           fontSize: 18,
+                          //           color:
+                          //               Theme.of(context).colorScheme.tertiary,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

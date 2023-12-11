@@ -321,7 +321,7 @@ class ViewData extends StatelessWidget {
           //   ),
           // ),
          subtitle: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColor.valid.withOpacity(0.05)),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColor.error.withOpacity(0.05)),
            child: Padding(
              padding: const EdgeInsets.all(3.0),
              child: Center(
@@ -338,9 +338,9 @@ class ViewData extends StatelessWidget {
                      ),
                    ),
                    const Text(
-                     ' Online',
+                     ' Booked',
                      style: TextStyle(
-                       color: AppColor.valid,
+                       color: AppColor.error,
                        fontFamily: 'Gilmer',
                        fontWeight: FontWeight.w700,
                        fontSize: 12,

@@ -8,17 +8,17 @@ import 'package:mavunohub/screens/app_screens/news.dart';
 import 'package:mavunohub/styles/pallete.dart';
 import 'package:mavunohub/user_controller.dart';
 
-class Services extends StatefulWidget {
-  const Services({Key? key}) : super(key: key);
+class Assets extends StatefulWidget {
+  const Assets({Key? key}) : super(key: key);
 
   @override
-  State<Services> createState() => _ServicesState();
+  State<Assets> createState() => _AssetsState();
 }
 
-class _ServicesState extends State<Services> {
+class _AssetsState extends State<Assets> {
   final UserController userController = Get.find<UserController>();
 
-  @override
+  @override                                                 
   void initState() {
     super.initState();
     userController.fetchUserDataFromFirestore();
@@ -29,7 +29,7 @@ class _ServicesState extends State<Services> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: const CustomAppBar(title: 'Services'),
+        appBar: const CustomAppBar(title: 'Assets'),
         body: Center(
           child: SizedBox(
             width: 420,
@@ -47,7 +47,7 @@ class _ServicesState extends State<Services> {
                   //       child: Padding(
                   //         padding: const EdgeInsets.symmetric(vertical: 25.0),
                   //         child: Text(
-                  //           'Services',
+                  //           'Assets',
                   //           style: TextStyle(
                   //             fontFamily: 'Gilmer',
                   //             fontSize: 26,
@@ -82,7 +82,7 @@ class _ServicesState extends State<Services> {
                             // Handle the case where username is null (e.g., user not authenticated)
                             return Text('User not authenticated');
                           }
-                        } else {  
+                        } else {
                           // Loading indicator while fetching username
                           return CircularProgressIndicator();
                         }
@@ -194,7 +194,7 @@ class _ServiceListState extends State<ServiceList> {
       // final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
       //     .collection('users')
       //     .doc(username)
-      //     .collection('services')
+      //     .collection('assets')
       //     .limit(10)
       //     .get();
       final QuerySnapshot userQuery = await FirebaseFirestore.instance
@@ -206,7 +206,7 @@ class _ServiceListState extends State<ServiceList> {
       final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(userDocId)
-          .collection('services')
+          .collection('assets')
           // .orderBy('date',
           //     descending: true) // Order by 'date' in descending order
           .limit(10)
@@ -220,17 +220,17 @@ class _ServiceListState extends State<ServiceList> {
 //  if(querySnapshot.docs.isNotEmpty){
 // String userDocId = querySnapshot.docs.first.id;
 
-//       // Create a reference to the 'services' subcollection
+//       // Create a reference to the 'assets' subcollection
 //       CollectionReference farmSetupCollection = FirebaseFirestore.instance
 //           .collection('users')
 //           .doc(userDocId)
-//           .collection('services');
+//           .collection('assets');
 
 //  }
     } catch (e) {
       print(e);
     }
-    // Load the first 10 services from the 'services' subcollection of a specific user
+    // Load the first 10 services from the 'assets' subcollection of a specific user
   }
 
   @override
@@ -244,16 +244,16 @@ class _ServiceListState extends State<ServiceList> {
         ),
       );
     } else if (services.isEmpty) {
-      // Display "No Service Added" message when the 'services' collection is empty or doesn't exist.
+      // Display "No Asset Added" message when the 'assets' collection is empty or doesn't exist.
       return Container(
         height: 200,
         child: const Center(
-          child: Text("No Service Added"),
+          child: Text("No Asset Added"),
         ),
       );
     }
 
-    // Build and return the ListView with service data.
+    // Build and return the ListView with asset data.
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -261,7 +261,7 @@ class _ServiceListState extends State<ServiceList> {
       itemBuilder: (context, index) {
         final serviceData = services[index].data() as Map<String, dynamic>;
         return ViewData(
-          service: serviceData['service'] ?? '',
+          asset: serviceData['asset'] ?? '',
           condition: serviceData['condition'] ?? '',
           duration: int.tryParse(serviceData['duration'] ?? '0') ?? 0,
           startDate: serviceData['start']?.toDate() ?? DateTime.now(),
@@ -273,14 +273,14 @@ class _ServiceListState extends State<ServiceList> {
 }
 
 class ViewData extends StatelessWidget {
-  final String service;
+  final String asset;
   final String condition;
   final int duration;
   final DateTime startDate;
   final DateTime endDate;
 
   ViewData({
-    required this.service,
+    required this.asset,
     required this.condition,
     required this.duration,
     required this.startDate,
@@ -303,7 +303,7 @@ class ViewData extends StatelessWidget {
         child: ExpansionTile(
           shape: Border(),  
           title: Text(
-            service,
+            asset,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onBackground,
               fontFamily: 'Gilmer',
@@ -321,7 +321,7 @@ class ViewData extends StatelessWidget {
           //   ),
           // ),
          subtitle: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColor.valid.withOpacity(0.05)),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColor.error.withOpacity(0.05)),
            child: Padding(
              padding: const EdgeInsets.all(3.0),
              child: Center(
@@ -338,9 +338,9 @@ class ViewData extends StatelessWidget {
                      ),
                    ),
                    const Text(
-                     ' Online',
+                     ' Booked',
                      style: TextStyle(
-                       color: AppColor.valid,
+                       color: AppColor.error,
                        fontFamily: 'Gilmer',
                        fontWeight: FontWeight.w700,
                        fontSize: 12,

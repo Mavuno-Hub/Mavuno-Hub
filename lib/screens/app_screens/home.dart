@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mavunohub/screens/app_screens/done..dart';
+import 'package:mavunohub/screens/app_screens/done.dart';
 import 'package:mavunohub/screens/app_screens/numerical_pad.dart';
 
 class Home extends StatefulWidget {

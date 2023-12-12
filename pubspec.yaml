@@ -38,6 +38,7 @@ dependencies:
   cached_network_image: ^3.3.0
   freezed_annotation: ^2.4.1
   flutter_riverpod: ^2.4.5
+  im_stepper: ^1.0.1+1
 dev_dependencies:
   flutter_test:
     sdk: flutter

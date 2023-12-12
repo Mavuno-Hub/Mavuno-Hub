@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mavunohub/components/appbar.dart';
 import 'package:mavunohub/responsive/mobile_body.dart';
+import 'package:mavunohub/screens/app_screens/billing&transactions.dart';
+import 'package:mavunohub/screens/app_screens/services.dart';
 import 'package:mavunohub/styles/pallete.dart';
 import 'package:mavunohub/user_controller.dart';
 
@@ -365,6 +367,17 @@ Color getStatusColor(String status, BuildContext context) {
   return Theme.of(context).colorScheme.surface;
 }
 
+
+// getStatusAction(String status, BuildContext context) {
+//   if (status == 'Booked') {
+//     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Billing()));
+//   } else {
+//     // Navigate to another screen or handle differently if the status is not 'Booked'
+//     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Services()));
+//   }
+// }
+
+
 class ViewData extends StatelessWidget {
   final String service;
   final String condition;
@@ -387,6 +400,7 @@ class ViewData extends StatelessWidget {
     // Define a date format
     final dateFormat = DateFormat('MMM d, y'); // Customize the format as needed
     Color statusColor = getStatusColor(status, context);
+    // Function() statusAction = getStatusAction(status, context);
 
     return Padding(
       padding: const EdgeInsets.all(1.0),
@@ -492,6 +506,7 @@ class ViewData extends StatelessWidget {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const MobileScaffold()));
                     },
+                    // onTap: statusAction,
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 3.0),

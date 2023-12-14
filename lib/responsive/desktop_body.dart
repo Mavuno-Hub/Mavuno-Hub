@@ -2,15 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:mavunohub/components/drawer.dart';
 import '../cards/my_box.dart';
 import '../cards/my_tile.dart';
+import '../cards/updates&events.dart';
+import '../components/snacky.dart';
+import '../screens/app_screens/billing&transactions.dart';
+import '../screens/app_screens/services.dart';
+import '../screens/app_screens/view_services.dart';
 
 class DesktopScaffold extends StatefulWidget {
-  const DesktopScaffold({super.key});
+  final String? username; // Add this line
 
+  const DesktopScaffold({
+    this.username, // Add this line
+  });
   @override
   State<DesktopScaffold> createState() => _DesktopScaffoldState();
 }
 
 class _DesktopScaffoldState extends State<DesktopScaffold> {
+
+    bool loading = true;
+  Widget? loadingWidget;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Future.delayed(const Duration(seconds: 3), () {
+        setState(() {
+          loading = false;
+        });
+      });
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,20 +85,34 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                   ),
 
                   // List Buttons
-                  const SingleChildScrollView(
+                   SingleChildScrollView(
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: Column(
                         children: [
                           MyTile(
                             title: 'Farm Setup',
+                            action: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const ViewServices(),
+                              ));
+                             
+                              // final snackBarHelper = SnackBarHelper(context);
+                              // snackBarHelper.showCustomSnackBarWithMenu();
+                            },
+                          ),
+                           MyTile(
+                            title: 'Billing & Transactions',
+                             action: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const Billing(),
+                              ));
+                             }
                           ),
                           MyTile(
                             title: 'Consultation Services',
                           ),
-                          MyTile(
-                            title: 'Billing & Transactions',
-                          ),
+                         
                         ],
                       ),
                     ),
@@ -113,31 +152,23 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                     ),
                   )),
                AspectRatio(
-              aspectRatio: 2,
-              child: SizedBox(
-                width: double.infinity,
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    // childAspectRatio: 1.0, // Maintain square aspect ratio
+              aspectRatio: 4,
+              child:  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Container(
+                      // height: 150,
+                      child: ListView.builder(
+                        itemCount: 5,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return SizedBox(
+                            width: 300,
+                            child: Updates(),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      // First instance of MyBox with different properties
-                      return const MyBox(
-                        title: 'My Tasks',
-                      );
-                    } else if (index == 1) {
-                      // Second instance of MyBox with different properties
-                      return const MyBox(
-                        title: 'My Status',
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
-              ),
             )
                 ],
               ),

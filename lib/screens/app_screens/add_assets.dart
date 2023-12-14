@@ -169,12 +169,12 @@ class _FarmSetupState extends State<AddAsset> {
           DotStepper(
             direction: Axis.horizontal,
             dotCount: dotCount,
-            dotRadius: 15,
+            dotRadius: 18,
 
             /// THIS MUST BE SET. SEE HOW IT IS CHANGED IN NEXT/PREVIOUS BUTTONS AND JUMP BUTTONS.
             activeStep: activeStep,
             shape: Shape.stadium,
-            spacing: 15,
+            spacing: 18,
             indicator: Indicator.shift,
 
             /// TAPPING WILL NOT FUNCTION PROPERLY WITHOUT THIS PIECE OF CODE.

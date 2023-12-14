@@ -12,6 +12,7 @@ import 'package:mavunohub/components/form_text.dart';
 import 'package:mavunohub/components/password.dart';
 import 'package:mavunohub/components/snacky.dart';
 import 'package:mavunohub/user_controller.dart';
+import '../../responsive/desktop_body.dart';
 import 'forgot_password.dart';
 
 class LogInUser extends StatefulWidget {
@@ -557,7 +558,7 @@ class _DesktopLogInState extends State<DesktopLogIn> {
           // Successfully logged in, navigate to the dashboard
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => MobileScaffold(username: fetchUsername),
+              builder: (context) => DesktopScaffold(username: fetchUsername),
             ),
             
           );

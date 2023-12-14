@@ -292,202 +292,204 @@ class ViewData extends StatelessWidget {
     // Define a date format
     final dateFormat = DateFormat('MMM d, y'); // Customize the format as needed
 
-    return Padding(
-      padding: const EdgeInsets.all(1.0),
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        color: Theme.of(context).colorScheme.secondary,
-        child: ExpansionTile(
-          shape: Border(),  
-          title: Text(
-            service,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onBackground,
-              fontFamily: 'Gilmer',
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-            ),
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(1.0),
+        child: Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
           ),
-          // subtitle: Text(
-          //   'condition: ' + condition,
-          //   style: TextStyle(
-          //     color: Theme.of(context).hintColor,
-          //     fontFamily: 'Gilmer',
-          //     fontWeight: FontWeight.w700,
-          //     fontSize: 10,
-          //   ),
-          // ),
-         subtitle: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColor.valid.withOpacity(0.05)),
-           child: Padding(
-             padding: const EdgeInsets.all(3.0),
-             child: Center(
-               child: Row(
-                 children: [
-                   Text(
-                     ' Status:',
-                     style: TextStyle(
-                       color: Theme.of(context).colorScheme.onBackground,
-                       fontFamily: 'Gilmer',
-                       fontWeight: FontWeight.w700,
-                       fontSize: 12,
+          color: Theme.of(context).colorScheme.secondary,
+          child: ExpansionTile(
+            shape: Border(),  
+            title: Text(
+              service,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onBackground,
+                fontFamily: 'Gilmer',
+                fontWeight: FontWeight.w700,
+                fontSize: 15,
+              ),
+            ),
+            // subtitle: Text(
+            //   'condition: ' + condition,
+            //   style: TextStyle(
+            //     color: Theme.of(context).hintColor,
+            //     fontFamily: 'Gilmer',
+            //     fontWeight: FontWeight.w700,
+            //     fontSize: 10,
+            //   ),
+            // ),
+           subtitle: Container(
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColor.valid.withOpacity(0.05)),
+             child: Padding(
+               padding: const EdgeInsets.all(3.0),
+               child: Center(
+                 child: Row(
+                   children: [
+                     Text(
+                       ' Status:',
+                       style: TextStyle(
+                         color: Theme.of(context).colorScheme.onBackground,
+                         fontFamily: 'Gilmer',
+                         fontWeight: FontWeight.w700,
+                         fontSize: 12,
+                         
+                       ),
+                     ),
+                     const Text(
+                       ' Online',
+                       style: TextStyle(
+                         color: AppColor.valid,
+                         fontFamily: 'Gilmer',
+                         fontWeight: FontWeight.w700,
+                         fontSize: 12,
                        
+                       ),
                      ),
-                   ),
-                   const Text(
-                     ' Online',
-                     style: TextStyle(
-                       color: AppColor.valid,
-                       fontFamily: 'Gilmer',
-                       fontWeight: FontWeight.w700,
-                       fontSize: 12,
-                     
-                     ),
-                   ),
-                 ],
+                   ],
+                 ),
                ),
              ),
            ),
-         ),
-
-          trailing: SizedBox(
-            width: 150,
-            child: Center(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        height: 15,
-                        child: Row(
-                          children: [
-                            Text(
-                              'Last Changed:',
-                              style: TextStyle(
-                                color: Theme.of(context).hintColor,
-                                fontFamily: 'Gilmer',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
-                              ),
-                            ),
-                            // Text(
-                            //   '$duration',
-                            //   style: TextStyle(
-                            //     color: Theme.of(context).colorScheme.tertiary,
-                            //     fontFamily: 'Gilmer',
-                            //     fontWeight: FontWeight.w700,
-                            //     fontSize: 12,
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 15,
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            Text(
-                              ' ${dateFormat.format(startDate)}',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.tertiary,
-                                fontFamily: 'Gilmer',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
-                              ),
-                            ),
-                            // Text(
-                            //   ' $condition',
-                            //   style: TextStyle(
-                            //     color: Theme.of(context).colorScheme.tertiary,
-                            //     fontFamily: 'Gilmer',
-                            //     fontWeight: FontWeight.w700,
-                            //     fontSize: 12,
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(flex: 1),
-                  InkWell(
-                    onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MobileScaffold()));
-                    },
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 3.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3),
-                            color: Theme.of(context).colorScheme.tertiary,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0).add(EdgeInsets.symmetric(horizontal: 8)),
-                            child: Row(
-                              children: [
-                                Text(
-                                  'More',
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.background,
-                                    fontFamily: 'Gilmer',
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                // Icon(Icons.arrow_right, color: Theme.of(context).colorScheme.background,size: 15,)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+    
+            trailing: SizedBox(
+              width: 150,
+              child: Center(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Start Date:       ${dateFormat.format(startDate)}',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground,
-                        fontFamily: 'Gilmer',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          height: 15,
+                          child: Row(
+                            children: [
+                              Text(
+                                'Last Changed:',
+                                style: TextStyle(
+                                  color: Theme.of(context).hintColor,
+                                  fontFamily: 'Gilmer',
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              // Text(
+                              //   '$duration',
+                              //   style: TextStyle(
+                              //     color: Theme.of(context).colorScheme.tertiary,
+                              //     fontFamily: 'Gilmer',
+                              //     fontWeight: FontWeight.w700,
+                              //     fontSize: 12,
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 15,
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              Text(
+                                ' ${dateFormat.format(startDate)}',
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.tertiary,
+                                  fontFamily: 'Gilmer',
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              // Text(
+                              //   ' $condition',
+                              //   style: TextStyle(
+                              //     color: Theme.of(context).colorScheme.tertiary,
+                              //     fontFamily: 'Gilmer',
+                              //     fontWeight: FontWeight.w700,
+                              //     fontSize: 12,
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      'End Date:      ${dateFormat.format(endDate)}',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground,
-                        fontFamily: 'Gilmer',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
+                    const Spacer(flex: 1),
+                    InkWell(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MobileScaffold()));
+                      },
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 3.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(3),
+                              color: Theme.of(context).colorScheme.tertiary,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0).add(EdgeInsets.symmetric(horizontal: 8)),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'More',
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.background,
+                                      fontFamily: 'Gilmer',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  // Icon(Icons.arrow_right, color: Theme.of(context).colorScheme.background,size: 15,)
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-            )
-          ],
+            ),
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Start Date:       ${dateFormat.format(startDate)}',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          fontFamily: 'Gilmer',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                        ),
+                      ),
+                      Text(
+                        'End Date:      ${dateFormat.format(endDate)}',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          fontFamily: 'Gilmer',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

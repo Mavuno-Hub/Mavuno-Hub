@@ -60,6 +60,8 @@ flutter:
     - assets/mavunohub_icon.png        
     - assets/mavunomark.png   
     - assets/holding-phone.png   
+    - assets/MPesaLogo.png
+    - assets/MPesa.png
   fonts:
     - family: Gilmer
       fonts:

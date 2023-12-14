@@ -8,6 +8,8 @@ import 'package:mavunohub/screens/app_screens/news.dart';
 import 'package:mavunohub/styles/pallete.dart';
 import 'package:mavunohub/user_controller.dart';
 
+import '../../components/form_text.dart';
+
 class Billing extends StatefulWidget {
   const Billing({Key? key}) : super(key: key);
 
@@ -33,63 +35,56 @@ class _AssetsState extends State<Billing> {
         body: Center(
           child: SizedBox(
             width: 420,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: CustomScrollView(
-                slivers: <Widget>[
-                  // SliverAppBar(
-                  //   expandedHeight: 100.0,
-                  //   floating: true,
-                  //   pinned: false,
-                  //   flexibleSpace: FlexibleSpaceBar(
-                  //     title: Align(
-                  //       alignment: Alignment.centerLeft,
-                  //       child: Padding(
-                  //         padding: const EdgeInsets.symmetric(vertical: 25.0),
-                  //         child: Text(
-                  //           'Billing',
-                  //           style: TextStyle(
-                  //             fontFamily: 'Gilmer',
-                  //             fontSize: 26,
-                  //             color: Theme.of(context).colorScheme.tertiary,
-                  //             fontWeight: FontWeight.w700,
-                  //           ),
-                  //           textAlign: TextAlign.start,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  SliverToBoxAdapter(
-                    child: SearchBar(handleSearch: (searchQuery) {
-                      // Implement search logic here
-                      // You can use searchQuery to filter Firestore data
-                      // For example, you can call fetchDataFromFirestore(searchQuery)
-                      // and update the data based on search results.
-                    }),
-                  ),
-                  // Use the UserController to retrieve the user's username
-                  SliverToBoxAdapter(
-                    child: FutureBuilder<String>(
-                      future: userController.getUsername(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          final username = snapshot.data;
-                          if (username != null) {
-                            // Pass the username to the ServiceList
-                            return ServiceList(username: username);
-                          } else {
-                            // Handle the case where username is null (e.g., user not authenticated)
-                            return Text('User not authenticated');
-                          }
-                        } else {
-                          // Loading indicator while fetching username
-                          return CircularProgressIndicator();
-                        }
-                      },
+            child:   Center(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: PhysicalModel(
+                  color: Theme.of(context).colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(15),
+                  child: Container(
+                    height: 400,
+                    width: 400,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Image.asset("assets/MPesaLogo.png",
+                                    height: 100),
+                                Spacer(),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "Paybill",
+                                      style: TextStyle(
+                                        color:Theme.of(context).colorScheme.tertiary,
+                                        fontFamily: 'Gilmer',
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    Text(
+                                      "795194",
+                                      style: TextStyle(
+                                        color: Theme.of(context).colorScheme.tertiary,
+                                        fontFamily: 'Gilmer',
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                    
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ),

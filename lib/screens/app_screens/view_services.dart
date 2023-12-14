@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mavunohub/components/appbar.dart';
-import 'package:mavunohub/responsive/mobile_body.dart';
 import 'package:mavunohub/screens/app_screens/billing&transactions.dart';
 import 'package:mavunohub/screens/app_screens/services.dart';
 import 'package:mavunohub/styles/pallete.dart';
@@ -262,6 +261,39 @@ class _ViewServicesState extends State<ViewServices> {
   }
 }
 
+// void changeStatus(String newStatus, dynamic snapshot) async {
+//   // Logic to update status in Firestore
+//   final username = snapshot.data;
+//   try {
+//     final QuerySnapshot userQuery = await FirebaseFirestore.instance
+//         .collection('users')
+//         .where('username', isEqualTo: username)
+//         .get();
+
+//     String userDocId = userQuery.docs.first.id;
+//     QuerySnapshot serviceQuery = await FirebaseFirestore.instance
+//         .collection('users')
+//         .doc(userDocId)
+//         .collection('services')
+//         .where('service', isEqualTo: service)
+//         .limit(1)
+//         .get();
+
+//     if (serviceQuery.docs.isNotEmpty) {
+//       String serviceDocId = serviceQuery.docs.first.id;
+//       await FirebaseFirestore.instance
+//           .collection('users')
+//           .doc(userDocId)
+//           .collection('services')
+//           .doc(serviceDocId)
+//           .update({'status': newStatus});
+//       // Refresh the UI or handle state updates as needed
+//     }
+//   } catch (e) {
+//     print(e);
+//   }
+// }
+
 class ServiceList extends StatefulWidget {
   final String username;
 
@@ -341,11 +373,11 @@ class _ServiceListState extends State<ServiceList> {
         final serviceData = services[index].data() as Map<String, dynamic>;
         return ViewData(
           service: serviceData['service'] ?? '',
-           status: serviceData['status'] ?? '',
+          status: serviceData['status'] ?? '',
           condition: serviceData['condition'] ?? '',
           duration: int.tryParse(serviceData['duration'] ?? '0') ?? 0,
           startDate: serviceData['start']?.toDate() ?? DateTime.now(),
-          endDate: serviceData['end']?.toDate() ?? DateTime.now(), 
+          endDate: serviceData['end']?.toDate() ?? DateTime.now(),
         );
       },
     );
@@ -367,7 +399,6 @@ Color getStatusColor(String status, BuildContext context) {
   return Theme.of(context).colorScheme.surface;
 }
 
-
 // getStatusAction(String status, BuildContext context) {
 //   if (status == 'Booked') {
 //     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Billing()));
@@ -376,7 +407,6 @@ Color getStatusColor(String status, BuildContext context) {
 //     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Services()));
 //   }
 // }
-
 
 class ViewData extends StatelessWidget {
   final String service;
@@ -503,8 +533,16 @@ class ViewData extends StatelessWidget {
                   const Spacer(flex: 1),
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const MobileScaffold()));
+                      if (status == 'Booked') {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => Billing(),
+                        ));
+                      } else {
+                        // Navigate to another screen or handle differently if the status is not 'Booked'
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => Services(),
+                        ));
+                      }
                     },
                     // onTap: statusAction,
                     child: Center(
@@ -521,7 +559,7 @@ class ViewData extends StatelessWidget {
                             child: Row(
                               children: [
                                 Text(
-                                  'More',
+                                  status == 'Booked' ? 'Pay' : 'More',
                                   style: TextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
@@ -531,6 +569,7 @@ class ViewData extends StatelessWidget {
                                     fontSize: 12,
                                   ),
                                 ),
+
                                 // Icon(Icons.arrow_right, color: Theme.of(context).colorScheme.background,size: 15,)
                               ],
                             ),
@@ -553,6 +592,11 @@ class ViewData extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
+                      // onTap: () {
+                      //   if (status != 'Booked') {
+                      //     changeStatus('Booked');
+                      //   }
+                      // },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Center(
@@ -597,6 +641,11 @@ class ViewData extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
+                      // onTap: () {
+                      //   if (status != 'Deactivated') {
+                      //     changeStatus('Deactivated');
+                      //   }
+                      // },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Center(

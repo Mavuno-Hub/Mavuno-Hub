@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mavunohub/screens/app_screens/assets.dart';
 import '../screens/app_screens/services.dart';
 import '../screens/app_screens/news.dart';
+import '../screens/app_screens/view _assets.dart';
 import '../screens/app_screens/view_services.dart';
 import 'navrouter.dart';
 import 'text.dart';
@@ -57,7 +58,7 @@ class _IconMenuState extends State<IconMenu> {
                       icon: Icons.sell_rounded,
                        onClicked: () {
                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const Assets(),
+                                builder: (context) => const ViewAssets(),
                               ));
                         }
                     ),

@@ -2,12 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mavunohub/features/rss.dart';
 import 'package:mavunohub/logic/auth/auth_service.dart';
 import 'package:mavunohub/firebase_options.dart';
 import 'package:mavunohub/responsive/mobile_body.dart';
 import 'package:mavunohub/screens/app_screens/log_in_page.dart';
 import 'package:mavunohub/screens/app_screens/news.dart';
 import 'package:mavunohub/user_controller.dart';
+
 import 'styles/theme/dark_theme.dart';
 import 'styles/theme/light_theme.dart';
 // import 'dart:io';
@@ -46,7 +48,7 @@ class MyApp extends StatelessWidget {
 //   Firebase.instance.settings(
 //     host: host,
 //     sslEnabled: false,
-//     persistenceEnabled: false,
+//     persistenceEnabled: false, 
 //   );
 //   // super.initState();
 // }
@@ -67,7 +69,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
         darkTheme: darkTheme,
-        home: const LogInUser(),
+        home:  News(),
         initialBinding: UserBindings(),
       ),
     );

@@ -20,7 +20,7 @@ dependencies:
   shared_preferences: ^2.2.2
   provider: ^6.0.5
   intl:
-  http:
+  http: ^1.1.2
   firebase_core_web:
   firebase_auth_web:
   change_app_package_name:
@@ -39,10 +39,11 @@ dependencies:
   freezed_annotation: ^2.4.1
   flutter_riverpod: ^2.4.5
   im_stepper: ^1.0.1+1
+  webfeed: ^0.7.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.13.1"
+  # flutter_launcher_icons: "^0.13.1"
   flutter_lints: ^3.0.0
   build_runner: any
   build_web_compilers: ^4.0.4

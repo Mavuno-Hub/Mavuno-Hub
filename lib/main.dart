@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:mavunohub/features/rss.dart';
 import 'package:mavunohub/logic/auth/auth_service.dart';
 import 'package:mavunohub/firebase_options.dart';
+import 'package:mavunohub/models/update_firestore.dart';
+import 'package:mavunohub/responsive/desktop_body.dart';
 import 'package:mavunohub/responsive/mobile_body.dart';
 import 'package:mavunohub/screens/app_screens/log_in_page.dart';
 import 'package:mavunohub/screens/app_screens/news.dart';
@@ -69,7 +71,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
         darkTheme: darkTheme,
-        home:  News(),
+        home:  LogInUser(),
         initialBinding: UserBindings(),
       ),
     );

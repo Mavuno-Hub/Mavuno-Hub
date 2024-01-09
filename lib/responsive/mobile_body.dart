@@ -1,312 +1,398 @@
-  import 'dart:developer';
+import 'dart:developer';
 
-  import 'package:flutter/material.dart';
-  import 'package:mavunohub/cards/news_feed.dart';
-  import 'package:mavunohub/components/bottom_menu.dart';
-  import 'package:mavunohub/components/drawer.dart';
-  import 'package:mavunohub/cards/my_box.dart';
-  import 'package:mavunohub/cards/my_tile.dart';
-  import 'package:mavunohub/screens/app_screens/services.dart';
+import 'package:flutter/material.dart';
+import 'package:mavunohub/cards/news_feed.dart';
+import 'package:mavunohub/components/bottom_menu.dart';
+import 'package:mavunohub/components/drawer.dart';
+import 'package:mavunohub/cards/my_box.dart';
+import 'package:mavunohub/cards/my_tile.dart';
+import 'package:mavunohub/screens/app_screens/services.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:mavunohub/features/rss_detailed.dart';
+import 'package:xml/xml.dart' as xml;
+import 'package:html/parser.dart' as htmlParser;
+import 'package:html/dom.dart' as html;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:webfeed/webfeed.dart';
+import '../cards/updates&events.dart';
+import '../screens/app_screens/news.dart';
+import '../screens/app_screens/services.dart';
+import '../styles/pallete.dart';
 
-  import '../cards/updates&events.dart';
-  import '../screens/app_screens/services.dart';
+class MobileScaffold extends StatefulWidget {
+  final String? username; // Add this line
 
-  class MobileScaffold extends StatefulWidget {
-    final String? username; // Add this line
-
-
-    const MobileScaffold({
-      this.username, // Add this line
-    });
-    @override
-    State<MobileScaffold> createState() => _MobileScaffoldState();
+  const MobileScaffold({
+    this.username, // Add this line
+  });
+  @override
+  State<MobileScaffold> createState() => _MobileScaffoldState();
 
   of(BuildContext context) {}
-  }
+}
 
-  class _MobileScaffoldState extends State<MobileScaffold> {
-    bool loading = true;
-    Widget? loadingWidget;
+class _MobileScaffoldState extends State<MobileScaffold> {
+  bool loading = true;
+  Widget? loadingWidget;
+  final rssUrl = 'https://kilimonews.co.ke/agribusiness/feed/'; // RSS feed URL
 
-    @override
-    void initState() {
-      super.initState();
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        Future.delayed(const Duration(seconds: 3), () {
-          setState(() {
-            loading = false;
-          });
-        });
-      });
+  late Future<List<Map<String, String?>>> futureRss;
+  late RssFeed _feed = RssFeed(items: []);
+  Future<List<Map<String, String?>>> parseRss(String url) async {
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch RSS feed');
     }
 
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: MobileAppbar(context),
-        drawer: const IconMenu(),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Column(
-                children: [
+    final rawRss = response.body;
+    final document = xml.XmlDocument.parse(rawRss);
 
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0).add(const EdgeInsets.symmetric(vertical: 10)),
-                      child: SizedBox(
+    final items = <Map<String, String?>>[];
+
+    for (final node in document.findAllElements('item')) {
+      final title = node.findElements('title').firstOrNull?.text;
+      final contentEncoded =
+          node.findElements('content:encoded').firstOrNull?.text;
+      final description = node.findElements('description').firstOrNull?.text;
+
+      String? imageUrl;
+
+      if (contentEncoded != null) {
+        final document = htmlParser.parse(contentEncoded);
+        final imgElement = document.querySelector('img');
+
+        if (imgElement != null) {
+          imageUrl = imgElement.attributes['src'];
+        }
+      }
+
+      if (title != null) {
+        items.add({
+          'title': title,
+          'imageUrl': imageUrl,
+          'description': description,
+        });
+      }
+    }
+    final xmlString = response.body;
+    final channel = RssFeed.parse(xmlString);
+    setState(() {
+      _feed = channel;
+    });
+    return items;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    futureRss = parseRss(rssUrl);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Future.delayed(const Duration(seconds: 3), () {
+        setState(() {
+          loading = false;
+        });
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: MobileAppbar(context),
+      drawer: const IconMenu(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0)
+                        .add(const EdgeInsets.symmetric(vertical: 10)),
+                    child: SizedBox(
                         height: 25,
                         child: Text(
-                        'Welcome ${widget.username}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
+                          'Welcome ${widget.username}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
                             fontFamily: 'Gilmer',
                             fontSize: 26,
                             color: Theme.of(context).colorScheme.onBackground,
                             fontWeight: FontWeight.w800,
                           ),
-                        )
-                      ),
-                    ),
+                        )),
                   ),
-                  // First 4 boxes in a row
-                  Container(
-                    height: 180, // Adjust the height as needed
+                ),
+                // First 4 boxes in a row
+                Container(
+                  height: 180, // Adjust the height as needed
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: MyBox(
+                          title: 'My Tasks',
+                          onClicked: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const Services(),
+                            ));
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: MyBox(title: 'My Status'),
+                      ),
+                    ],
+                  ),
+                ),
+                // List of previous days
+                Container(
+                  height: 220, // Adjust the height as needed
+                  child: ListView.builder(
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return MyTile(
+                          title: 'Farm Setup',
+                          action: () {
+                            final snackBarHelper = SnackBarHelper(context);
+                            snackBarHelper.showCustomSnackBarWithMenu();
+                          },
+                        );
+                      } else if (index == 1) {
+                        return const MyTile(title: 'Consultation Services');
+                      } else if (index == 2) {
+                        return const MyTile(title: 'Billings & Transactions');
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => News(),
+                    ));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0).add(
+                        const EdgeInsets.symmetric(vertical: 5)
+                            .add(const EdgeInsets.only(top: 10))),
                     child: Row(
                       children: [
-                        Expanded(
-                          child: MyBox(
-                            title: 'My Tasks',
-                            onClicked: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const Services(),
-                              ));
-                            },
+                        Text(
+                          'News Feed',
+                          style: TextStyle(
+                            fontFamily: 'Gilmer',
+                            fontSize: 14,
+                            color: Theme.of(context).hintColor,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        Expanded(
-                          child: MyBox(title: 'My Status'),
+                        const Spacer(flex: 1),
+                        Text(
+                          'More',
+                          style: TextStyle(
+                            fontFamily: 'Gilmer',
+                            fontSize: 14,
+                            color: Theme.of(context).colorScheme.tertiary,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 14,
+                          color: Theme.of(context).colorScheme.tertiary,
+                        )
                       ],
                     ),
                   ),
-                  // List of previous days
-                  Container(
-                    height: 220, // Adjust the height as needed
+                ),
+                Container(
+                  height: 300,
+                  child: 
+                      SizedBox(
+                        width: 420,
+                        child: FutureBuilder<List<Map<String, String?>>>(
+                            future: futureRss,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                    child: CircularProgressIndicator(color: AppColor.yellow));
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                    child: Text('Error: ${snapshot.error}'));
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data!.isEmpty) {
+                                return Center(
+                                    child: Text('No data available'));
+                              } else {
+                                return ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                    itemCount: snapshot.data!.length,
+                                    itemBuilder: (context, index) {
+                                      final item = snapshot.data![index];
+                                      final items = _feed.items?[index];
+                                      return NewsFeed(title:item['title'], imageUrl:  item['imageUrl'], onClicked: () async {
+                            if (items?.link != null) {
+                              await launch(items!.link!);
+                            }
+                          },shortDescription:   item['description'],);
+                                    });
+                              }
+                            }
+                            
+                            ),
+                      )
+                                
+                
+                ),
+                GestureDetector(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0).add(
+                        const EdgeInsets.symmetric(vertical: 5)
+                            .add(const EdgeInsets.only(top: 10))),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Updates & Events',
+                          style: TextStyle(
+                            fontFamily: 'Gilmer',
+                            fontSize: 14,
+                            color: Theme.of(context).hintColor,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const Spacer(flex: 1),
+                        Text(
+                          'More',
+                          style: TextStyle(
+                            fontFamily: 'Gilmer',
+                            fontSize: 14,
+                            color: Theme.of(context).colorScheme.tertiary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 14,
+                          color: Theme.of(context).colorScheme.tertiary,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Container(
+                    height: 150,
                     child: ListView.builder(
-                      itemCount: 4,
+                      itemCount: 5,
+                      scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return MyTile(
-                            title: 'Farm Setup',
-                            action: () {
-                              final snackBarHelper = SnackBarHelper(context);
-                              snackBarHelper.showCustomSnackBarWithMenu();
-                            },
-                          );
-                        } else if (index == 1) {
-                          return const MyTile(title: 'Consultation Services');
-                        } else if (index == 2) {
-                          return const MyTile(title: 'Billings & Transactions');
-                        } else {
-                          return const SizedBox.shrink();
-                        }
+                        return SizedBox(
+                          width: 300,
+                          child: Updates(),
+                        );
                       },
                     ),
                   ),
-                  GestureDetector(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0).add(
-                          const EdgeInsets.symmetric(vertical: 5)
-                              .add(const EdgeInsets.only(top: 10))),
-                      child: Row(
-                        children: [
-                          Text(
-                            'News Feed',
-                            style: TextStyle(
-                              fontFamily: 'Gilmer',
-                              fontSize: 14,
-                              color: Theme.of(context).hintColor,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const Spacer(flex: 1),
-                          Text(
-                            'More',
-                            style: TextStyle(
-                              fontFamily: 'Gilmer',
-                              fontSize: 14,
-                              color: Theme.of(context).colorScheme.tertiary,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_rounded,
-                            size: 14,
-                            color: Theme.of(context).colorScheme.tertiary,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                    child: Container(
-                      height: 220,
-                      child: ListView.builder(
-                        itemCount: 5,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: 250,
-                            child: NewsFeed(),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0).add(
-                          const EdgeInsets.symmetric(vertical: 5)
-                              .add(const EdgeInsets.only(top: 10))),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Updates & Events',
-                            style: TextStyle(
-                              fontFamily: 'Gilmer',
-                              fontSize: 14,
-                              color: Theme.of(context).hintColor,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const Spacer(flex: 1),
-                          Text(
-                            'More',
-                            style: TextStyle(
-                              fontFamily: 'Gilmer',
-                              fontSize: 14,
-                              color: Theme.of(context).colorScheme.tertiary,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_rounded,
-                            size: 14,
-                            color: Theme.of(context).colorScheme.tertiary,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                    child: Container(
-                      height: 150,
-                      child: ListView.builder(
-                        itemCount: 5,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: 300,
-                            child: Updates(),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-      );
-    }
-
-    AppBar MobileAppbar(BuildContext context) {
-      return AppBar(
-        backgroundColor: Colors.transparent,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const MobileScaffold(),
-                ));
-              },
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Image.asset('assets/mavunohub_icon.png',
-                        width: 28, height: 28),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-        centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            height: 35,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            child: TextFormField(
-              maxLines: 1,
-              minLines: 1,
-              cursorColor: Theme.of(context).colorScheme.tertiary,
-              style: TextStyle(
-                fontFamily: 'Gilmer',
-                fontSize: 14,
-                color: Theme.of(context).colorScheme.onBackground,
-                fontWeight: FontWeight.w300,
-              ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                hintText: "Search",
-                hintStyle: TextStyle(
-                  fontSize: 14,
-                  color: Theme.of(context).hintColor,
-                  fontFamily: "Gilmer",
-                  fontWeight: FontWeight.w500,
-                ),
-                focusColor: Theme.of(context).colorScheme.tertiary,
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 2),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.secondary,
-                    width: 0,
-                  ),
-                ),
-                fillColor: Theme.of(context).colorScheme.secondary,
-                filled: true,
-                prefixIcon: Icon(Icons.search, color: Theme.of(context).hintColor),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.tertiary,
-                    width: 2,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
+      ),
+    );
   }
+
+  AppBar MobileAppbar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const MobileScaffold(),
+              ));
+            },
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image.asset('assets/mavunohub_icon.png',
+                      width: 28, height: 28),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+      centerTitle: true,
+      title: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          height: 35,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary,
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          child: TextFormField(
+            maxLines: 1,
+            minLines: 1,
+            cursorColor: Theme.of(context).colorScheme.tertiary,
+            style: TextStyle(
+              fontFamily: 'Gilmer',
+              fontSize: 14,
+              color: Theme.of(context).colorScheme.onBackground,
+              fontWeight: FontWeight.w300,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              hintText: "Search",
+              hintStyle: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).hintColor,
+                fontFamily: "Gilmer",
+                fontWeight: FontWeight.w500,
+              ),
+              focusColor: Theme.of(context).colorScheme.tertiary,
+              isDense: true,
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.secondary,
+                  width: 0,
+                ),
+              ),
+              fillColor: Theme.of(context).colorScheme.secondary,
+              filled: true,
+              prefixIcon:
+                  Icon(Icons.search, color: Theme.of(context).hintColor),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.tertiary,
+                  width: 2,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

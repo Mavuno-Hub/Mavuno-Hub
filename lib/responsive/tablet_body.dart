@@ -3,6 +3,9 @@ import 'package:mavunohub/components/drawer.dart';
 import 'package:mavunohub/cards/my_box.dart';
 import 'package:mavunohub/cards/my_tile.dart';
 
+import '../components/bottom_menu.dart';
+import '../screens/app_screens/news.dart';
+
 class TabletScaffold extends StatefulWidget {
   const TabletScaffold({super.key});
 
@@ -57,8 +60,12 @@ class _TabletScaffoldState extends State<TabletScaffold> {
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       // First instance of MyBox with different properties
-                      return const MyTile(
+                      return MyTile(
                         title: 'Farm Setup',
+                        action: () {
+                          final snackBarHelper = SnackBarHelper(context);
+                          snackBarHelper.showCustomSnackBarWithMenu();
+                        },
                       );
                     } else if (index == 1) {
                       // Second instance of MyBox with different properties
@@ -76,43 +83,47 @@ class _TabletScaffoldState extends State<TabletScaffold> {
                   }),
             ),
             GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => News(),
+                  ));
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Row(
-                              children: [
-                  Text(
-                    'News Feed',
-                    style: TextStyle(
-                      fontFamily: 'Gilmer',
-                      fontSize: 14,
-                      color: Theme.of(context).colorScheme.onBackground,
-                     fontWeight: FontWeight.w700,
-                    ),
+                    children: [
+                      Text(
+                        'News Feed',
+                        style: TextStyle(
+                          fontFamily: 'Gilmer',
+                          fontSize: 14,
+                          color: Theme.of(context).colorScheme.onBackground,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const Spacer(flex: 1),
+                      Text(
+                        'More',
+                        style: TextStyle(
+                          fontFamily: 'Gilmer',
+                          fontSize: 14,
+                          color: Theme.of(context).colorScheme.tertiary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 14,
+                        color: Theme.of(context).colorScheme.tertiary,
+                      )
+                    ],
                   ),
-                  const Spacer(flex: 1),
-                  Text(
-                    'More',
-                    style: TextStyle(
-                      fontFamily: 'Gilmer',
-                      fontSize: 14,
-                      color: Theme.of(context).colorScheme.tertiary,
-                     fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_rounded,size: 14,
-                    color: Theme.of(context).colorScheme.tertiary,
-                  )
-                              ],
-                            ),
                 )),
             // Expanded(
             //   child:  Row(
             //     children: [const NewsFeed(hint: 'News\nFeed')],
             //   )
-                
-                   
-                  
+
             // ),
             //
           ],

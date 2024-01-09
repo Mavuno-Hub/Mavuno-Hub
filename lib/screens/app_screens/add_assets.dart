@@ -19,7 +19,7 @@ class AddAsset extends StatefulWidget {
 
 class _FarmSetupState extends State<AddAsset> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _services = TextEditingController();
+  final TextEditingController _assets = TextEditingController();
   final TextEditingController _condition = TextEditingController();
   final TextEditingController _duration = TextEditingController();
   bool isSliderInteracted = false;
@@ -91,7 +91,7 @@ class _FarmSetupState extends State<AddAsset> {
     final snacky = SnackBarHelper(context);
     String condition = _condition.text.toString();
     String duration = _duration.text.toString();
-    String asset = _services.text.toString();
+    String asset = _assets.text.toString();
     final UserController userController = Get.find();
 
     int conditionValue;
@@ -128,24 +128,24 @@ class _FarmSetupState extends State<AddAsset> {
             .collection('assets');
 
         // Check if the asset already exists for this user
-        QuerySnapshot serviceQuery = await farmSetupCollection
-            .where('asset', isEqualTo: _services.text)
+        QuerySnapshot assetQuery = await farmSetupCollection
+            .where('asset', isEqualTo: _assets.text)
             .get();
 
-        if (serviceQuery.docs.isNotEmpty) {
-          // Service already exists, show error message or handle accordingly
-          snacky.showSnackBar("Service already exists for this user",
+        if (assetQuery.docs.isNotEmpty) {
+          // Asset already exists, show error message or handle accordingly
+          snacky.showSnackBar("Asset already exists for this user",
               isError: true);
         } else {
-          // Service does not exist, add it to the collection
+          // Asset does not exist, add it to the collection
           await farmSetupCollection.add({
-            'asset': _services.text,
+            'asset': _assets.text,
             'condition': _condition.text,
             'duration': _duration.text,
             'start': selectedStartDate,
             'end': selectedEndDate,
           });
-          snacky.showSnackBar("Farm setup was successful", isError: false);
+          snacky.showSnackBar("Asset was added successfuly", isError: false);
           setState(() {
             selectedStartDate = null;
             selectedEndDate = null;
@@ -212,18 +212,18 @@ class _FarmSetupState extends State<AddAsset> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const Subtitle(
-                          text: "Choose Services",
+                          text: "Choose Assets",
                           hint: 'Assets I currently own',
                         ),
                         FormDropDown(
-                          text: 'Select Service',
+                          text: 'Select Asset',
                           list: assets,
-                          controller: _services,
+                          controller: _assets,
                         ),
                         const Subtitle(
                           text: "Condition",
                           hint:
-                              'Condition of the Service (Rate condition from 1-10)',
+                              'Condition of the Asset (Rate condition from 1-10)',
                         ),
                         FormSlider(
                           text: 'text',

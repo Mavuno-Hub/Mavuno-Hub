@@ -84,7 +84,7 @@ class _AssetsState extends State<Assets> {
                           }
                         } else {
                           // Loading indicator while fetching username
-                          return CircularProgressIndicator();
+                          return CircularProgressIndicator(color: AppColor.yellow);
                         }
                       },
                     ),

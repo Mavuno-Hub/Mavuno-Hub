@@ -91,6 +91,7 @@ Future<void> saveFormDataToFirestore() async {
           'condition': _condition.text,
           'duration': _duration.text,
           'start': selectedStartDate,
+          'status': 'onl',
           'end': selectedEndDate,
         });
         snacky.showSnackBar("Farm setup was successful", isError: false);

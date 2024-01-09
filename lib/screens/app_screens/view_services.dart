@@ -30,7 +30,66 @@ class _ViewServicesState extends State<ViewServices> {
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Theme.of(context).colorScheme.background,
-          appBar: const CustomAppBar(title: 'Services'),
+          appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_rounded,
+                    color: Theme.of(context).colorScheme.tertiary),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              title: Text(
+                'View Services',
+                style: TextStyle(
+                  fontFamily: "Gilmer",
+                  fontWeight: FontWeight.w700,
+                  fontSize: 22,
+                  color: Theme.of(context).colorScheme.tertiary,
+                ),
+              ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0)
+                      .add(EdgeInsets.symmetric(horizontal: 10)),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ViewServices()));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Icon(
+                              Icons.refresh,
+                              color: Theme.of(context).colorScheme.onBackground,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Text(
+                              'Refresh',
+                              style: TextStyle(
+                                fontFamily: 'Gilmer',
+                                fontSize: 14,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ]),
           body: Center(
             child: SizedBox(
               width: 420,
@@ -76,27 +135,36 @@ class _ViewServicesState extends State<ViewServices> {
   }
 
   Widget buildAllServicesTab() {
-    return ListView(
-      children: [
-        FutureBuilder<String>(
-          future: userController.getUsername(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              final username = snapshot.data;
-              if (username != null) {
-                // Pass the username to the ServiceList
-                return ServiceList(username: username);
-              } else {
-                // Handle the case where username is null (e.g., user not authenticated)
-                return Text('User not authenticated');
-              }
-            } else {
-              // Loading indicator while fetching username
-              return CircularProgressIndicator();
-            }
-          },
+    return RefreshIndicator(
+      onRefresh: () async {
+        userController.fetchUserDataFromFirestore();
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          children: [
+            FutureBuilder<String>(
+              future: userController.getUsername(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  final username = snapshot.data;
+                  if (username != null) {
+                    // Pass the username to the ServiceList
+                    return ServiceList(username: username);
+                  } else {
+                    // Handle the case where username is null (e.g., user not authenticated)
+                    return Text('User not authenticated');
+                  }
+                } else {
+                  // Loading indicator while fetching username
+                  return const Center(
+                      child: CircularProgressIndicator(color: AppColor.yellow));
+                }
+              },
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -140,7 +208,8 @@ class _ViewServicesState extends State<ViewServices> {
                     );
                   }
                 } else {
-                  return CircularProgressIndicator();
+                  return const Center(
+                      child: CircularProgressIndicator(color: AppColor.yellow));
                 }
               },
             );
@@ -148,7 +217,8 @@ class _ViewServicesState extends State<ViewServices> {
             return Text('User not authenticated');
           }
         } else {
-          return CircularProgressIndicator();
+          return const Center(
+              child: CircularProgressIndicator(color: AppColor.yellow));
         }
       },
     );
@@ -194,7 +264,8 @@ class _ViewServicesState extends State<ViewServices> {
                     );
                   }
                 } else {
-                  return CircularProgressIndicator();
+                  return const Center(
+                      child: CircularProgressIndicator(color: AppColor.yellow));
                 }
               },
             );
@@ -202,7 +273,8 @@ class _ViewServicesState extends State<ViewServices> {
             return Text('User not authenticated');
           }
         } else {
-          return CircularProgressIndicator();
+          return const Center(
+              child: CircularProgressIndicator(color: AppColor.yellow));
         }
       },
     );
@@ -351,7 +423,8 @@ class _ServiceListState extends State<ServiceList> {
       return Container(
         height: 400,
         child: const Center(
-          child: CircularProgressIndicator(color: AppColor.yellow),
+          child: const Center(
+              child: CircularProgressIndicator(color: AppColor.yellow)),
         ),
       );
     } else if (services.isEmpty) {
@@ -401,7 +474,7 @@ Color getStatusColor(String status, BuildContext context) {
 
 // getStatusAction(String status, BuildContext context) {
 //   if (status == 'Booked') {
-//     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Billing()));
+//     Navigator.of(context).push(Mate  rialPageRoute(builder: (context) => const Billing()));
 //   } else {
 //     // Navigate to another screen or handle differently if the status is not 'Booked'
 //     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Services()));
@@ -477,6 +550,7 @@ class ViewData extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         fontSize: 12,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -642,8 +716,8 @@ class ViewData extends StatelessWidget {
                     ),
                     GestureDetector(
                       // onTap: () {
-                      //   if (status != 'Deactivated') {
-                      //     changeStatus('Deactivated');
+                      //   if (status != 'deactivated') {
+                      //     changeStatus('deactivated');
                       //   }
                       // },
                       child: Padding(

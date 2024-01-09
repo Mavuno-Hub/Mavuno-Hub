@@ -84,7 +84,7 @@ class _ServicesState extends State<Services> {
                           }
                         } else {  
                           // Loading indicator while fetching username
-                          return CircularProgressIndicator();
+                          return CircularProgressIndicator(color: AppColor.yellow);
                         }
                       },
                     ),

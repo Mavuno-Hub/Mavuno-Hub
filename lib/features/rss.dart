@@ -1,170 +1,319 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:webfeed/webfeed.dart';
 import 'package:http/http.dart' as http;
+import 'package:mavunohub/features/rss_detailed.dart';
+import 'package:xml/xml.dart' as xml;
+import 'package:html/parser.dart' as htmlParser;
+import 'package:html/dom.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:webfeed/webfeed.dart';
 
-import '../components/snacky.dart';
+import '../styles/pallete.dart';
 
 class NewsRSS extends StatefulWidget {
-  //
-  NewsRSS() : super();
+  @override
+  _NewsRSSState createState() => _NewsRSSState();
+  final String? imageUrl;
+  final String? title;
+  final String? shortDescription;
+  final VoidCallback? onClicked;
 
-  final String title = 'NewsRSS Feed Demo';
+  const NewsRSS(
+      {super.key,
+      this.imageUrl,
+      this.title,
+      this.shortDescription,
+      this.onClicked});
+}
+
+class _NewsRSSState extends State<NewsRSS> {
+  final baseUrl ='https://kilimonews.co.ke/agribusiness/feed/'; 
+  final rssUrl = 'https://kilimonews.co.ke/agribusiness/feed/'; // RSS feed URL
+  late Future<List<Map<String, String?>>> futureRss;
+  late RssFeed _feed = RssFeed(items: []);
+  Map<String, String> headers = {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+      //  "auth-token": idToken, // whatever headers you need(I add auth)
+      "content-type":
+          "application/json", // Specify content-type as JSON to prevent empty response body
+
+      // "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
+      "Access-Control-Allow-Headers":
+          "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+      'Accept': '*/*',
+      "Access-Control-Allow-Methods": "POST, OPTIONS"
+    };
+  Future<List<Map<String, String?>>> parseRss(String url) async {
+    final response = await http.get(Uri.parse(url),headers: headers);
+    
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch RSS feed');
+    }
+
+    final rawRss = response.body;
+    final document = xml.XmlDocument.parse(rawRss);
+
+    final items = <Map<String, String?>>[];
+
+    for (final node in document.findAllElements('item')) {
+      final title = node.findElements('title').firstOrNull?.text;
+      final contentEncoded =
+          node.findElements('content:encoded').firstOrNull?.text;
+      final description = node.findElements('description').firstOrNull?.text;
+
+      String? imageUrl;
+
+      if (contentEncoded != null) {
+        final document = htmlParser.parse(contentEncoded);
+        final imgElement = document.querySelector('img');
+
+        if (imgElement != null) {
+          imageUrl = imgElement.attributes['src'];
+        }
+      }
+
+      if (title != null) {
+        items.add({
+          'title': title,
+          'imageUrl': imageUrl,
+          'description': description,
+        });
+      }
+    }
+    final xmlString = response.body;
+    final channel = RssFeed.parse(xmlString);
+    setState(() {
+      _feed = channel;
+    });
+    return items;
+  }
 
   @override
-  NewsRSSState createState() => NewsRSSState();
-}
-
-class NewsRSSState extends State<NewsRSS> {
-  //
-  static const String FEED_URL =
-      'https://www.kenyanews.go.ke/category/agri/feed/';
-  late RssFeed _feed = RssFeed(items: []);
-  late String _title;
-  static const String loadingFeedMsg = 'Loading Feed...';
-  static const String feedLoadErrorMsg = 'Error Loading Feed.';
-  static const String feedOpenErrorMsg = 'Error Opening Feed.';
-  static const String placeholderImg = 'images/no_image.png';
-  late GlobalKey<RefreshIndicatorState> _refreshKey;
-   
-  updateTitle(title) {
-    setState(() {
-      _title = title;
-    });
-  }
-
-  updateFeed(feed) {
-    setState(() {
-      _feed = feed;
-    });
-  }
-
-  Future<void> openFeed(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: true,
-        forceWebView: false,
-      );
-      return;
-    }
-    updateTitle(feedOpenErrorMsg);
-  }
-
-  load() async {
-    updateTitle(loadingFeedMsg);
-    loadFeed().then((result) {
-      if (null == result || result.toString().isEmpty) {
-        updateTitle(feedLoadErrorMsg);
-        return;
-      }
-      updateFeed(result);
-      updateTitle(_feed.title);
-    });
-  }
-
-Future<RssFeed?> loadFeed() async {
-   SnackBarHelper snacky = SnackBarHelper(context);
-  try {
-    final client = http.Client();
-    final response = await client.get(Uri.parse(FEED_URL));
-    return RssFeed.parse(response.body);
-  } catch (e) {
-    print("Error: $e");
-    snacky.showSnackBar("An error occurred: $e", isError: true);
-  }
-  return null;
-}
- @override
   void initState() {
     super.initState();
-    _refreshKey = GlobalKey<RefreshIndicatorState>();
-    updateTitle(widget.title);
-    load();
-  }
-  title(title) {
-    return Text(
-      title,
-      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-
-  subtitle(subTitle) {
-    return Text(
-      subTitle,
-      style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w100),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-
-  thumbnail(imageUrl) {
-    return Padding(
-      padding: EdgeInsets.only(left: 15.0),
-      child: CachedNetworkImage(
-        placeholder: (context, url) => Image.asset(placeholderImg),
-        imageUrl: imageUrl,
-        height: 50,
-        width: 70,
-        alignment: Alignment.center,
-        fit: BoxFit.fill,
-      ),
-    );
-  }
-
-  rightIcon() {
-    return Icon(
-      Icons.keyboard_arrow_right,
-      color: Colors.grey,
-      size: 30.0,
-    );
-  }
-
-  list() {
-    return ListView.builder(
-      itemCount: _feed.items?.length,
-      itemBuilder: (BuildContext context, int index) {
-        final item = _feed.items?[index];
-        return ListTile(
-          title: title(item?.title),
-          subtitle: subtitle(item?.pubDate),
-          leading: thumbnail(item!.enclosure?.url),
-          trailing: rightIcon(),
-          contentPadding: EdgeInsets.all(5.0),
-          // onTap: () => openFeed(item?.link),
-        );
-      },
-    );
-  }
-
-  isFeedEmpty() {
-    return null == _feed || null == _feed.items;
-  }
-
-  body() {
-    return isFeedEmpty()
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
-        : RefreshIndicator(
-            key: _refreshKey,
-            child: list(),
-            onRefresh: () => load(),
-          );
+    futureRss = parseRss(rssUrl);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_title),
-      ),
-      body: body(),
-    );
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_rounded,
+                color: Theme.of(context).colorScheme.tertiary),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          actions: [
+            IconButton(
+              icon: Image.asset(
+                "assets/mavunohub_icon.png",
+                width: 25,
+              ),
+              iconSize: 35,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            const Padding(padding: EdgeInsets.all(10)),
+          ],
+          elevation: 0.0,
+          title: Text(
+            'News Feed',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.tertiary,
+              fontFamily: 'Gilmer',
+              fontSize: 32,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          toolbarHeight: 75,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).colorScheme.background,
+                  Theme.of(context).colorScheme.background
+                ],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+              ),
+            ),
+            padding: const EdgeInsets.only(bottom: 38),
+          ),
+        ),
+        body: FutureBuilder<List<Map<String, String?>>>(
+          future: futureRss,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                  child: CircularProgressIndicator(color: AppColor.yellow));
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No data available'));
+            } else {
+              return Center(
+                child: SizedBox(
+                  width: 420,
+                  child: ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final item = snapshot.data![index];
+                      final items = _feed.items?[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () async {
+                            if (items?.link != null) {
+                              await launch(items!.link!);
+                            }
+                          },
+                          hoverColor: Theme.of(context)
+                              .colorScheme
+                              .background
+                              .withOpacity(1),
+                          child: Container(
+                            height: 350,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.secondary,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (item['imageUrl'] != null)
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                      ),
+                                      child: Image.network(
+                                        item['imageUrl']!,
+                                        height: 120,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                if (item['imageUrl'] == null)
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                      ),
+                                    ),
+                                  ),
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0).add(
+                                    const EdgeInsets.symmetric(horizontal: 6.0),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 320,
+                                        child: Text(
+                                          item['title'] ?? '',
+                                          style: TextStyle(
+                                            fontFamily: "Gilmer",
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .tertiary,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
+                                      const Spacer(flex: 1),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: Icon(
+                                          Icons.arrow_forward,
+                                          size: 18,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .tertiary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: SizedBox(
+                                    width: 320,
+                                    child: Text(
+                                      item['description'] ?? '',
+                                      style: TextStyle(
+                                        fontFamily: "Gilmer",
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(flex: 1),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 2.0,
+                                  ).add(const EdgeInsets.all(8.0)),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Click for more information',
+                                        style: TextStyle(
+                                          fontFamily: "Gilmer",
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .tertiary,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      const Spacer(flex: 1),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+            }
+          },
+        ));
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mavunohub/features/rss.dart';
 import 'package:mavunohub/screens/app_screens/assets.dart';
 import '../screens/app_screens/services.dart';
 import '../screens/app_screens/news.dart';
@@ -77,7 +78,7 @@ class _IconMenuState extends State<IconMenu> {
                       icon: Icons.newspaper_rounded,
                       onClicked: () {
                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>  News(),
+                                builder: (context) =>  NewsRSS(),
                               ));
                         }),
                     
@@ -138,8 +139,11 @@ Widget buildMenuItem({
       dense: true,
       title: Transform.translate(
           offset: const Offset(-20, 0),
-          child: Jina(
-              text: text!, rangi: Theme.of(context).colorScheme.onBackground)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Jina(
+                text: text!, rangi: Theme.of(context).colorScheme.onBackground),
+          )),
       hoverColor: hoverColor,
       onTap: onClicked,
     );

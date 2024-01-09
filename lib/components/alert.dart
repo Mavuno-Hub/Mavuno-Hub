@@ -12,6 +12,7 @@ class Alert {
       context: context,
       builder: (context) {
         return AlertDialog(
+      
           title: Text(
             title,
             style: TextStyle(
@@ -34,57 +35,65 @@ class Alert {
                     color: Theme.of(context).colorScheme.onBackground),
               ),
               const SizedBox(height: 16),
-              Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: message));
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      width: 100,
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.tertiary,
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Copy Password',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontFamily: 'Gilmer',
-                              fontWeight: FontWeight.w800,
-                              fontSize: 12,
-                              color: Theme.of(context).colorScheme.background),
+              Center(
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Clipboard.setData(ClipboardData(text: message));
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          width: 80,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.tertiary,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Copy',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: 'Gilmer',
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 12,
+                                  color: Theme.of(context).colorScheme.background),
+                            overflow: TextOverflow.fade,),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      width: 100,
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(24, 255, 255, 255),
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Close',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontFamily: 'Gilmer',
-                              fontWeight: FontWeight.w800,
-                              fontSize: 12,
-                              color: Theme.of(context).colorScheme.tertiary),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap:  () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          width: 80,
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(24, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Close',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: 'Gilmer',
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 12,
+                                  color: Theme.of(context).colorScheme.tertiary),
+                            overflow: TextOverflow.fade,),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

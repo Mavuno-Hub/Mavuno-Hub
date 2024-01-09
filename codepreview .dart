@@ -251,7 +251,7 @@ class _ViewServicesState extends State<ViewServices> {
               }
             } else {
               // Loading indicator while fetching username
-              return CircularProgressIndicator();
+              return CircularProgressIndicator(color: AppColor.yellow);
             }
           },
         ),
@@ -299,7 +299,7 @@ class _ViewServicesState extends State<ViewServices> {
                     );
                   }
                 } else {
-                  return CircularProgressIndicator();
+                  return CircularProgressIndicator(color: AppColor.yellow);
                 }
               },
             );
@@ -307,7 +307,7 @@ class _ViewServicesState extends State<ViewServices> {
             return Text('User not authenticated');
           }
         } else {
-          return CircularProgressIndicator();
+          return CircularProgressIndicator(color: AppColor.yellow);
         }
       },
     );
@@ -353,7 +353,7 @@ class _ViewServicesState extends State<ViewServices> {
                     );
                   }
                 } else {
-                  return CircularProgressIndicator();
+                  return CircularProgressIndicator(color: AppColor.yellow);
                 }
               },
             );
@@ -361,7 +361,7 @@ class _ViewServicesState extends State<ViewServices> {
             return Text('User not authenticated');
           }
         } else {
-          return CircularProgressIndicator();
+          return CircularProgressIndicator(color: AppColor.yellow);
         }
       },
     );
@@ -514,7 +514,7 @@ class _ServiceListState extends State<ServiceList> {
 Color getStatusColor(String status, BuildContext context) {
   if (status == 'Online') {
     return Theme.of(context).colorScheme.surface;
-  } else if (status == 'Deactivated') {
+  } else if (status == 'deactivated') {
     return Theme.of(context).colorScheme.errorContainer;
   } else if (status == 'Booked') {
     return Theme.of(context).colorScheme.tertiary;

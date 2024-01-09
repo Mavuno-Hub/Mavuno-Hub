@@ -1,41 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mavunohub/features/rss_detailed.dart';
+import 'package:mavunohub/styles/pallete.dart';
+import 'package:xml/xml.dart' as xml;
+import 'package:html/parser.dart' as htmlParser;
+import 'package:html/dom.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webfeed/webfeed.dart';
 
-class News extends StatefulWidget {
+class NewsBuilder extends StatefulWidget {
   @override
-  NewsState createState() => NewsState();
+
+  _NewsBuilderState createState() => _NewsBuilderState();
 }
 
-class NewsState extends State<News> {
-  late RssFeed _feed = RssFeed(items: []);
-  static const String placeholderImg = 'assets/no-image.png';
-  late String _title;
-  Future<void> loadFeed() async {
-    try {
-      final String FEED_URL = 'https://kilimonews.co.ke/agribusiness/feed/';
-      final client = http.Client();
-      final response = await client.get(Uri.parse(FEED_URL),headers:  {
-  "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-  // "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
-  "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
-  "Access-Control-Allow-Methods": "POST, OPTIONS"
-},);
-      final xmlString = response.body;
-      final channel = RssFeed.parse(xmlString);
+class _NewsBuilderState extends State<NewsBuilder> {
+  final rssUrl = 'https://kilimonews.co.ke/agribusiness/feed/'; // RSS feed URL
+  late Future<List<Map<String, String?>>> futureRss;
+ late RssFeed _feed = RssFeed(items: []);
+  Future<List<Map<String, String?>>> parseRss(String url) async {
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch RSS feed');
+    }
+
+    final rawRss = response.body;
+    final document = xml.XmlDocument.parse(rawRss);
+
+    final items = <Map<String, String?>>[];
+
+    for (final node in document.findAllElements('item')) {
+      final title = node.findElements('title').firstOrNull?.text;
+      final contentEncoded =
+          node.findElements('content:encoded').firstOrNull?.text;
+      final description = node.findElements('description').firstOrNull?.text;
+
+      String? imageUrl;
+
+      if (contentEncoded != null) {
+        final document = htmlParser.parse(contentEncoded);
+        final imgElement = document.querySelector('img');
+
+        if (imgElement != null) {
+          imageUrl = imgElement.attributes['src'];
+        }
+      }
+
+      if (title != null) {
+        items.add({
+          'title': title,
+          'imageUrl': imageUrl,
+          'description': description,
+        });
+      }
+    }
+    final xmlString = response.body;
+final channel = RssFeed.parse(xmlString);
       setState(() {
         _feed = channel;
       });
-    } catch (e) {
-      print('Error loading RSS feed: $e');
-    }
+    return items;
   }
 
   @override
   void initState() {
     super.initState();
-    loadFeed();
+    futureRss = parseRss(rssUrl);
   }
 
   @override
@@ -59,7 +90,6 @@ class NewsState extends State<News> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            // onPressed: onClickedHome,
           ),
           const Padding(padding: EdgeInsets.all(10)),
         ],
@@ -74,7 +104,6 @@ class NewsState extends State<News> {
           ),
         ),
         toolbarHeight: 75,
-        // centerTitle: true,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
@@ -93,27 +122,30 @@ class NewsState extends State<News> {
           padding: const EdgeInsets.only(bottom: 38),
         ),
       ),
-      body: _feed.items!.isEmpty
-          ? Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.background,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).colorScheme.background),
-              ),
-            )
-          : Center(
+      body: FutureBuilder<List<Map<String, String?>>>(
+        future: futureRss,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator(color: AppColor.yellow));
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No data available'));
+          } else {
+            return Center(
               child: SizedBox(
                 width: 420,
                 child: ListView.builder(
-                  itemCount: _feed.items?.length ?? 0,
+                  itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
-                    final item = _feed.items?[index];
+                    final item = snapshot.data![index];
+                        final items = _feed.items?[index];
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
-                        onTap: () async {
-                          if (item?.link != null) {
-                            await launch(item!.link!);
+                         onTap: () async {
+                          if (items?.link != null) {
+                            await launch(items!.link!);
                           }
                         },
                         hoverColor: Theme.of(context)
@@ -121,7 +153,7 @@ class NewsState extends State<News> {
                             .background
                             .withOpacity(1),
                         child: Container(
-                          height: 250, // Adjust the height as needed
+                          height: 350,
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.secondary,
                             borderRadius: BorderRadius.circular(8),
@@ -129,11 +161,11 @@ class NewsState extends State<News> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (item?.enclosure?.url != null)
+                              if (item['imageUrl'] != null)
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
-                                    height: 100,
+                                    height: 200,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       color: Theme.of(context)
@@ -141,18 +173,18 @@ class NewsState extends State<News> {
                                           .background,
                                     ),
                                     child: Image.network(
-                                      item!.enclosure!.url!,
+                                      item['imageUrl']!,
                                       height: 120,
                                       width: double.infinity,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
-                              if (item?.enclosure?.url == null)
+                              if (item['imageUrl'] == null)
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
-                                    height: 100,
+                                    height: 200,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       color: Theme.of(context)
@@ -161,17 +193,16 @@ class NewsState extends State<News> {
                                     ),
                                   ),
                                 ),
-                              // Spacer(flex: 1),
                               Padding(
                                 padding: const EdgeInsets.all(2.0).add(
-                                    const EdgeInsets.symmetric(
-                                        horizontal: 6.0)),
+                                  const EdgeInsets.symmetric(horizontal: 6.0),
+                                ),
                                 child: Row(
                                   children: [
                                     SizedBox(
                                       width: 320,
                                       child: Text(
-                                        item?.title ?? '',
+                                        item['title'] ?? '',
                                         style: TextStyle(
                                           fontFamily: "Gilmer",
                                           fontSize: 18,
@@ -204,7 +235,7 @@ class NewsState extends State<News> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
-                                  item?.description ?? '',
+                                  item['description'] ?? '',
                                   style: TextStyle(
                                     fontFamily: "Gilmer",
                                     fontSize: 12,
@@ -213,18 +244,15 @@ class NewsState extends State<News> {
                                         .colorScheme
                                         .onBackground,
                                   ),
-                                  // overflow: TextOverflow.ellipsis,
                                   maxLines: 4,
                                   textAlign: TextAlign.left,
                                 ),
                               ),
-
                               const Spacer(flex: 1),
-
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 2.0)
-                                        .add(const EdgeInsets.all(8.0)),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 2.0,
+                                ).add(const EdgeInsets.all(8.0)),
                                 child: Row(
                                   children: [
                                     Text(
@@ -253,7 +281,9 @@ class NewsState extends State<News> {
                   },
                 ),
               ),
-            ),
-    );
+            );
+          }
+        },
+      )    );
   }
 }

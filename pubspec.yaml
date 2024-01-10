@@ -15,7 +15,7 @@ dependencies:
   firebase_crashlytics: ^3.3.7
   firebase_auth: ^4.10.1
   firebase_database: ^10.2.7
-  cloud_firestore: ^4.9.3
+  cloud_firestore: ^4.14.0
   firebase_storage: ^11.2.8
   shared_preferences: ^2.2.2
   provider: ^6.0.5
@@ -41,6 +41,7 @@ dependencies:
   im_stepper: ^1.0.1+1
   webfeed: ^0.7.0
   html: ^0.15.4
+  showcaseview: ^2.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

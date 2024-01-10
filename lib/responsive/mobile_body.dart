@@ -1,45 +1,46 @@
-import 'dart:developer';
-
-import 'package:flutter/material.dart';
-import 'package:mavunohub/cards/news_feed.dart';
-import 'package:mavunohub/components/bottom_menu.dart';
-import 'package:mavunohub/components/drawer.dart';
-import 'package:mavunohub/cards/my_box.dart';
-import 'package:mavunohub/cards/my_tile.dart';
-import 'package:mavunohub/screens/app_screens/services.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mavunohub/features/rss_detailed.dart';
+import 'package:mavunohub/components/bottom_menu.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:html/parser.dart' as htmlParser;
-import 'package:html/dom.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webfeed/webfeed.dart';
+import '../cards/news_feed.dart';
+import '../cards/my_box.dart';
+import '../cards/my_tile.dart';
 import '../cards/updates&events.dart';
+import '../components/drawer.dart';
+// import '../components/Showcase.dart';
 import '../screens/app_screens/news.dart';
 import '../screens/app_screens/services.dart';
 import '../styles/pallete.dart';
 
 class MobileScaffold extends StatefulWidget {
-  final String? username; // Add this line
+  final String? username;
 
   const MobileScaffold({
-    this.username, // Add this line
+    this.username,
   });
+
   @override
   State<MobileScaffold> createState() => _MobileScaffoldState();
-
-  of(BuildContext context) {}
 }
 
 class _MobileScaffoldState extends State<MobileScaffold> {
-  bool loading = true;
-  Widget? loadingWidget;
-  final rssUrl = 'https://kilimonews.co.ke/agribusiness/feed/'; // RSS feed URL
+  final GlobalKey _myTasksKey = GlobalKey();
+  final GlobalKey _myStatusKey = GlobalKey();
+  final GlobalKey _farmSetupKey = GlobalKey();
+  final GlobalKey _consultationKey = GlobalKey();
+  final GlobalKey _transactionsKey = GlobalKey();
+  final GlobalKey _newsFeedKey = GlobalKey();
 
+  bool loading = true;
   late Future<List<Map<String, String?>>> futureRss;
   late RssFeed _feed = RssFeed(items: []);
+
+  final rssUrl = 'https://kilimonews.co.ke/agribusiness/feed/';
+
   Future<List<Map<String, String?>>> parseRss(String url) async {
     final response = await http.get(Uri.parse(url));
 
@@ -77,6 +78,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
         });
       }
     }
+
     final xmlString = response.body;
     final channel = RssFeed.parse(xmlString);
     setState(() {
@@ -89,7 +91,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
   void initState() {
     super.initState();
     futureRss = parseRss(rssUrl);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {
           loading = false;
@@ -116,58 +118,82 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                     padding: const EdgeInsets.symmetric(horizontal: 15.0)
                         .add(const EdgeInsets.symmetric(vertical: 10)),
                     child: SizedBox(
-                        height: 25,
-                        child: Text(
-                          'Welcome ${widget.username}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'Gilmer',
-                            fontSize: 26,
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        )),
+                      height: 25,
+                      child: Text(
+                        'Welcome ${widget.username}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Gilmer',
+                          fontSize: 26,
+                          color: Theme.of(context).colorScheme.onBackground,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                // First 4 boxes in a row
                 Container(
-                  height: 180, // Adjust the height as needed
+                  height: 180,
                   child: Row(
                     children: [
                       Expanded(
-                        child: MyBox(
+                        child: Showcase(
+                          key: _myTasksKey,
                           title: 'My Tasks',
-                          onClicked: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const Services(),
-                            ));
-                          },
+                          description: 'Click here to manage your tasks!',
+                          child: MyBox(
+                            title: 'My Tasks',
+                            onClicked: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const Services(),
+                              ));
+                            },
+                          ),
                         ),
                       ),
                       Expanded(
-                        child: MyBox(title: 'My Status'),
+                        child: Showcase(
+                          key: _myStatusKey,
+                          title: 'My Status',
+                          description: 'Click here to see your status',
+                          child: const MyBox(title: 'My Status'),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                // List of previous days
                 Container(
-                  height: 220, // Adjust the height as needed
+                  height: 220,
                   child: ListView.builder(
                     itemCount: 4,
                     itemBuilder: (context, index) {
                       if (index == 0) {
-                        return MyTile(
+                        return Showcase(
+                          key: _farmSetupKey,
                           title: 'Farm Setup',
-                          action: () {
-                            final snackBarHelper = SnackBarHelper(context);
-                            snackBarHelper.showCustomSnackBarWithMenu();
-                          },
+                          description: 'Explore the latest news here!',
+                          child: MyTile(
+                            title: 'Farm Setup',
+                            action: () {
+                              final snackBarHelper = SnackBarHelper(context);
+                              snackBarHelper.showCustomSnackBarWithMenu();
+                            },
+                          ),
                         );
                       } else if (index == 1) {
-                        return const MyTile(title: 'Consultation Services');
+                        return Showcase(
+                          key: _consultationKey,
+                          title: 'Consultation Services',
+                          description: 'Explore the latest news here!',
+                          child: const MyTile(title: 'Consultation Services'),
+                        );
                       } else if (index == 2) {
-                        return const MyTile(title: 'Billings & Transactions');
+                        return Showcase(
+                          key: _transactionsKey,
+                          title: 'Billings & Transactions',
+                          description: 'Explore the latest news here!',
+                          child: const MyTile(title: 'Billings & Transactions'),
+                        );
                       } else {
                         return const SizedBox.shrink();
                       }
@@ -181,18 +207,23 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                     ));
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0).add(
-                        const EdgeInsets.symmetric(vertical: 5)
-                            .add(const EdgeInsets.only(top: 10))),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0)
+                        .add(const EdgeInsets.symmetric(vertical: 5)
+                        .add(const EdgeInsets.only(top: 10))),
                     child: Row(
                       children: [
-                        Text(
-                          'News Feed',
-                          style: TextStyle(
-                            fontFamily: 'Gilmer',
-                            fontSize: 14,
-                            color: Theme.of(context).hintColor,
-                            fontWeight: FontWeight.w700,
+                        Showcase(
+                          key: _newsFeedKey,
+                          title: 'News Feed',
+                          description: 'Explore the latest news here!',
+                          child: Text(
+                            'News Feed',
+                            style: TextStyle(
+                              fontFamily: 'Gilmer',
+                              fontSize: 14,
+                              color: Theme.of(context).hintColor,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                         const Spacer(flex: 1),
@@ -216,49 +247,54 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                 ),
                 Container(
                   height: 300,
-                  child: 
-                      SizedBox(
-                        width: 420,
-                        child: FutureBuilder<List<Map<String, String?>>>(
-                            future: futureRss,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Center(
-                                    child: CircularProgressIndicator(color: AppColor.yellow));
-                              } else if (snapshot.hasError) {
-                                return Center(
-                                    child: Text('Error: ${snapshot.error}'));
-                              } else if (!snapshot.hasData ||
-                                  snapshot.data!.isEmpty) {
-                                return Center(
-                                    child: Text('No data available'));
-                              } else {
-                                return ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                    itemCount: snapshot.data!.length,
-                                    itemBuilder: (context, index) {
-                                      final item = snapshot.data![index];
-                                      final items = _feed.items?[index];
-                                      return NewsFeed(title:item['title'], imageUrl:  item['imageUrl'], onClicked: () async {
-                            if (items?.link != null) {
-                              await launch(items!.link!);
-                            }
-                          },shortDescription:   item['description'],);
-                                    });
-                              }
-                            }
-                            
+                  child: SizedBox(
+                    width: 420,
+                    child: FutureBuilder<List<Map<String, String?>>>(
+                      future: futureRss,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColor.yellow,
                             ),
-                      )
-                                
-                
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
+                          );
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return Center(child: Text('No data available'));
+                        } else {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              final item = snapshot.data![index];
+                              final items = _feed.items?[index];
+                              return NewsFeed(
+                                title: item['title'],
+                                imageUrl: item['imageUrl'],
+                                onClicked: () async {
+                                  if (items?.link != null) {
+                                    await launch(items!.link!);
+                                  }
+                                },
+                                shortDescription: item['description'],
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
                 ),
                 GestureDetector(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0).add(
-                        const EdgeInsets.symmetric(vertical: 5)
-                            .add(const EdgeInsets.only(top: 10))),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0)
+                        .add(const EdgeInsets.symmetric(vertical: 5)
+                        .add(const EdgeInsets.only(top: 10))),
                     child: Row(
                       children: [
                         Text(

@@ -5,12 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mavunohub/components/alert.dart';
+import 'package:mavunohub/components/form_options.dart';
 import 'package:mavunohub/responsive/responsive_layout.dart';
 import 'package:mavunohub/screens/app_screens/term_&_conditions.dart';
 // import 'package:mavunohub/responsive/mobile_body.dart';
 // import 'package:mavunohub/responsive/responsive_layout.dart';
 // import 'package:mavunohub/screens/app_screens/log_in.dart';
 import 'package:mavunohub/components/snacky.dart' as snackBarHelper;
+import 'package:mavunohub/util/list.dart';
 import '../../components/custom_button.dart';
 import '../../components/form_text.dart';
 import '../../components/phone_field.dart';
@@ -60,6 +62,7 @@ class _MobileSignUpState extends State<MobileSignUp> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phonenumberController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   bool _acceptTerms = false;
 
   Future<bool> doesUsernameExist(String username) async {
@@ -81,7 +84,7 @@ class _MobileSignUpState extends State<MobileSignUp> {
     final snacky = snackBarHelper.SnackBarHelper(context);
     final String username = _usernameController.text.trim();
     final String phone = _phonenumberController.text.trim();
-
+    final String location = _locationController.text.trim();
     if (username.isEmpty) {
       snacky.showSnackBar("Username is empty", isError: true);
       return;
@@ -118,6 +121,7 @@ class _MobileSignUpState extends State<MobileSignUp> {
       await FirebaseFirestore.instance.collection("users").add({
         'username': username,
         'phone': phone, // Store the phone number as a string
+        'location': location,
         'password': password,
         'terms_accepted': _acceptTerms,
       });
@@ -255,6 +259,15 @@ class _MobileSignUpState extends State<MobileSignUp> {
                           signed: false, decimal: false),
                       controller: _phonenumberController,
                     ),
+                    SizedBox(
+                      width: 300,
+                      child: FormDropDown(
+                        text: 'Location',
+                        list: citiesKe,
+                        controller: _locationController,
+                        // hint: 'Select Location',
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -377,6 +390,7 @@ class _DesktopSignUpState extends State<DesktopSignUp> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phonenumberController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   bool _acceptTerms = false;
 
   Future<bool> doesUsernameExist(String username) async {
@@ -397,6 +411,7 @@ class _DesktopSignUpState extends State<DesktopSignUp> {
     final snacky = snackBarHelper.SnackBarHelper(context);
     final String username = _usernameController.text.trim();
     final String phone = _phonenumberController.text.trim();
+    final String location = _locationController.text.trim();
 
     if (username.isEmpty) {
       snacky.showSnackBar("Username is empty", isError: true);
@@ -435,6 +450,7 @@ class _DesktopSignUpState extends State<DesktopSignUp> {
         'username': username,
         'phone': phone, // Store the phone number as a string
         'password': password,
+        'location': location,
         'terms_accepted': _acceptTerms,
       });
 
@@ -571,6 +587,15 @@ class _DesktopSignUpState extends State<DesktopSignUp> {
                           signed: false, decimal: false),
                       controller: _phonenumberController,
                     ),
+                    SizedBox(
+                      width: 360,
+                      child: FormDropDown(
+                        text: 'Select Location',
+                        list: citiesKe,
+                        controller: _locationController,
+                        hint: 'Select Location',
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -693,6 +718,7 @@ class _TabletSignUpState extends State<TabletSignUp> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phonenumberController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   bool _acceptTerms = false;
 
   Future<bool> doesUsernameExist(String username) async {
@@ -714,7 +740,7 @@ class _TabletSignUpState extends State<TabletSignUp> {
 
     final String username = _usernameController.text.trim();
     final String phone = _phonenumberController.text.trim();
-
+    final String location = _locationController.text.trim();
     if (username.isEmpty) {
       snacky.showSnackBar("Username is empty", isError: true);
       return;

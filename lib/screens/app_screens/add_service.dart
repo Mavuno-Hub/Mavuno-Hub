@@ -6,6 +6,7 @@ import 'package:mavunohub/components/appbar.dart';
 import 'package:mavunohub/components/form_options.dart';
 import 'package:mavunohub/components/custom_calendar.dart';
 import 'package:mavunohub/components/snacky.dart';
+import 'package:mavunohub/screens/app_screens/view_services.dart';
 import 'package:mavunohub/user_controller.dart';
 import 'package:mavunohub/util/list.dart';
 
@@ -91,7 +92,7 @@ Future<void> saveFormDataToFirestore() async {
           'condition': _condition.text,
           'duration': _duration.text,
           'start': selectedStartDate,
-          'status': 'onl',
+          'status': 'online',
           'end': selectedEndDate,
         });
         snacky.showSnackBar("Farm setup was successful", isError: false);
@@ -173,7 +174,7 @@ Future<void> saveFormDataToFirestore() async {
                               }
                             },
                             child: Container(
-                              width: 300,
+                              width: 140,
                               height: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
@@ -182,6 +183,31 @@ Future<void> saveFormDataToFirestore() async {
                               child: Center(
                                 child: Text(
                                   'Save',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 18,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                           GestureDetector(
+                            onTap: (){
+                              Navigator.of(context).push(MaterialPageRoute(builder: ((context) => const ViewServices())));
+                            },
+                            child: Container(
+                              width: 140,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Theme.of(context).colorScheme.tertiary,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'View',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 18,

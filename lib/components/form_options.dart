@@ -30,12 +30,14 @@ class _FormDropDownState extends State<FormDropDown> {
     return Column(
       children: [
         DropdownButtonFormField<String>(
+          itemHeight: 50,
           style: TextStyle(
             fontFamily: 'Gilmer',
             fontSize: 14,
             color: Theme.of(context).hintColor,
             fontWeight: FontWeight.w700,
           ),
+          menuMaxHeight: 300,
           decoration: InputDecoration(
             isDense: true,
             hintText: "   Select ${widget.text}",
@@ -46,15 +48,15 @@ class _FormDropDownState extends State<FormDropDown> {
               fontWeight: FontWeight.w700,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
                 color: Theme.of(context).colorScheme.tertiary,
                 width: 2,

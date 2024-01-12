@@ -1,6 +1,12 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:mavunohub/components/bottom_menu.dart';
+import 'package:mavunohub/main.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:html/parser.dart' as htmlParser;
@@ -11,7 +17,8 @@ import '../cards/my_box.dart';
 import '../cards/my_tile.dart';
 import '../cards/updates&events.dart';
 import '../components/drawer.dart';
-// import '../components/Showcase.dart';
+// import '../components/Showcase.dart
+// ';
 import '../screens/app_screens/news.dart';
 import '../screens/app_screens/services.dart';
 import '../styles/pallete.dart';
@@ -34,6 +41,8 @@ class _MobileScaffoldState extends State<MobileScaffold> {
   final GlobalKey _consultationKey = GlobalKey();
   final GlobalKey _transactionsKey = GlobalKey();
   final GlobalKey _newsFeedKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final scrollController = ScrollController();
 
   bool loading = true;
   late Future<List<Map<String, String?>>> futureRss;
@@ -91,18 +100,109 @@ class _MobileScaffoldState extends State<MobileScaffold> {
   void initState() {
     super.initState();
     futureRss = parseRss(rssUrl);
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Future.delayed(const Duration(seconds: 3), () {
         setState(() {
           loading = false;
         });
       });
     });
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => ShowCaseWidget.of(context).startShowCase([
+              _myTasksKey,
+              _myStatusKey,
+              _farmSetupKey,
+              _consultationKey,
+              _transactionsKey,
+              _newsFeedKey
+            ]));
+
+    super.initState();
+    ambiguate(WidgetsBinding.instance)?.addPostFrameCallback(
+      (_) => ShowCaseWidget.of(context).startShowCase([
+        _myTasksKey,
+        _myStatusKey,
+        _farmSetupKey,
+        _consultationKey,
+        _transactionsKey,
+        _newsFeedKey
+      ]),
+    );
+  }
+
+  final _controller = ScrollController();
+
+  Widget build(BuildContext context) {
+    // Wrap your entire Scaffold with ShowcaseView
+
+    return ShowCaseWidget(
+      onStart: (index, key) {
+        log('onStart: $index, $key');
+        if (index == 0) {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) {
+              _controller.jumpTo(1000);
+            },
+          );
+        }
+      },
+      onComplete: (index, key) {
+        log('onComplete: $index, $key');
+        if (index == 4) {
+          SystemChrome.setSystemUIOverlayStyle(
+            SystemUiOverlayStyle.light.copyWith(
+              statusBarIconBrightness: Brightness.dark,
+              statusBarColor: Colors.white,
+            ),
+          );
+        }
+      },
+      blurValue: 1,
+      builder: Builder(builder: (context) => _buildScaffold(context)),
+      // Add necessary ShowcaseView options here
+      autoPlayDelay: const Duration(seconds: 3),
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<Map<String, int>> getServiceCount() async {
+    try {
+      final QuerySnapshot userQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: widget.username)
+          .get();
+
+      String userDocId = userQuery.docs.first.id;
+      final QuerySnapshot querySnapshotService = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .doc(userDocId)
+          .collection('services')
+          .get();
+      final QuerySnapshot querySnapshotAssets = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userDocId)
+          .collection('assets')
+          .get();
+
+      int serviceCount = querySnapshotService.size;
+      int assetCount = querySnapshotAssets.size;
+
+      return {'services': serviceCount, 'assets': assetCount};
+    } catch (e) {
+      print(e);
+      return {'services': 0, 'assets': 0}; // Return 0 in case of an error
+    }
+  }
+
+  Widget _buildScaffold(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: MobileAppbar(context),
       drawer: const IconMenu(),
@@ -118,7 +218,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                     padding: const EdgeInsets.symmetric(horizontal: 15.0)
                         .add(const EdgeInsets.symmetric(vertical: 10)),
                     child: SizedBox(
-                      height: 25,
+                      height: 30,
                       child: Text(
                         'Welcome ${widget.username}',
                         textAlign: TextAlign.center,
@@ -137,32 +237,140 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Showcase(
-                          key: _myTasksKey,
-                          title: 'My Tasks',
-                          description: 'Click here to manage your tasks!',
-                          child: MyBox(
-                            title: 'My Tasks',
-                            onClicked: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const Services(),
-                              ));
-                            },
-                          ),
+                        // height: 180,
+                        // width: double.infinity,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width / 2,
+                              child: Showcase(
+                                key: _myTasksKey,
+                                title: 'My Tasks',
+                                description: 'Click here to manage your tasks!',
+                                child: MyBox(
+                                  title: 'My Tasks',
+                                  holder1: 'Pending',
+                                  opFunction: () => getServiceCount(),
+                                  holder2: 'Complete',
+                                  holder3: 'All',
+                                   type1: 'assets',
+                                    type2: 'services',
+                                  onClicked: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => const Services(),
+                                    ));
+                                  },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              // width: MediaQuery.of(context).size.width / 2,
+                              child: SizedBox(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                child: Showcase(
+                                  key: _myStatusKey,
+                                  title: 'My Status',
+                                  description: 'Click here to check your status!',
+                                  child: MyBox(
+                                    title: 'My Status',
+                                    holder1: 'Assets',
+                                    holder2: 'Services',
+                                    holder3: 'All',
+                                    opFunction: () => getServiceCount(),
+                                    type1: 'assets',
+                                    type2: 'services',
+                                    onClicked: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => const Services(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Expanded(
-                        child: Showcase(
-                          key: _myStatusKey,
-                          title: 'My Status',
-                          description: 'Click here to see your status',
-                          child: const MyBox(title: 'My Status'),
-                        ),
-                      ),
+
+                      // Expanded(
+                      //   child: Showcase(
+                      //     key: _myTasksKey,
+                      //     title: 'My Status',
+                      //     description: 'Click here to check your status!',
+                      //     child: FutureBuilder<int>(
+                      //       future: getServiceCount(),
+                      //       builder: (context, snapshot) {
+                      //         if (snapshot.connectionState ==
+                      //             ConnectionState.done) {
+                      //           final int serviceCount = snapshot.data ?? 0;
+                      //           return MyBox(
+                      //             title: 'My Status',
+                      //             holder1: 'All',
+                      //             holder2: 'Assets',
+                      //             holder3: 'Services',
+                      //             data3: '$serviceCount',
+                      //             onClicked: () {
+                      //               Navigator.of(context).push(
+                      //                 MaterialPageRoute(
+                      //                   builder: (context) => const Services(),
+                      //                 ),
+                      //               );
+                      //             },
+                      //           );
+                      //         } else {
+                      //           // Show a loading indicator while the data is loading
+                      //           return Container(
+                      //             alignment: Alignment.center,
+                      //             child: CircularProgressIndicator(),
+                      //           );
+                      //         }
+                      //       },
+                      //     ),
+                      //   ),
+                      // )
+                      // Expanded(
+                      //   child: Showcase(
+                      //     key: _myTasksKey,
+                      //     title: 'My Status',
+                      //     description: 'Click here to check your status!',
+                      //     child: FutureBuilder<Map<String, int>>(
+                      //       future: getServiceCount(),
+                      //       builder: (context, snapshot) {
+                      //         if (snapshot.connectionState ==
+                      //             ConnectionState.done) {
+                      //           final int servicesCount =
+                      //               snapshot.data?['services'] ?? 0;
+                      //           final int assetsCount =
+                      //               snapshot.data?['assets'] ?? 0;
+
+                      //           return MyBox(
+                      //             title: 'My Status',
+                      //             holder1: 'All',
+                      //             holder2: 'Assets',
+                      //             holder3: 'Services',
+                      //             data1: '',
+                      //             data2: '$assetsCount',
+                      //             data3: '$servicesCount',
+                      //             onClicked: () {
+                      //               Navigator.of(context).push(
+                      //                 MaterialPageRoute(
+                      //                   builder: (context) => const Services(),
+                      //                 ),
+                      //               );
+                      //             },
+                      //           );
+                      //         }
+                      //       }
+                      //     ),
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
-                Container(
+                SizedBox(
                   height: 220,
                   child: ListView.builder(
                     itemCount: 4,
@@ -185,7 +393,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                           key: _consultationKey,
                           title: 'Consultation Services',
                           description: 'Explore the latest news here!',
-                          child: const MyTile(title: 'Consultation Services'),
+                          child: MyTile(title: 'Consultation Services'),
                         );
                       } else if (index == 2) {
                         return Showcase(
@@ -207,9 +415,9 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                     ));
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0)
-                        .add(const EdgeInsets.symmetric(vertical: 5)
-                        .add(const EdgeInsets.only(top: 10))),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0).add(
+                        const EdgeInsets.symmetric(vertical: 5)
+                            .add(const EdgeInsets.only(top: 10))),
                     child: Row(
                       children: [
                         Showcase(
@@ -248,15 +456,24 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                 Container(
                   height: 300,
                   child: SizedBox(
-                    width: 420,
+                    // width: 420,
                     child: FutureBuilder<List<Map<String, String?>>>(
                       future: futureRss,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              color: AppColor.yellow,
+                          return Center(
+                            child: Container(
+                              height: 300,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                              alignment: Alignment.center,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: Theme.of(context).colorScheme.tertiary,
+                              )),
                             ),
                           );
                         } else if (snapshot.hasError) {
@@ -292,9 +509,9 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                 ),
                 GestureDetector(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0)
-                        .add(const EdgeInsets.symmetric(vertical: 5)
-                        .add(const EdgeInsets.only(top: 10))),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0).add(
+                        const EdgeInsets.symmetric(vertical: 5)
+                            .add(const EdgeInsets.only(top: 10))),
                     child: Row(
                       children: [
                         Text(
@@ -341,6 +558,14 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                     ),
                   ),
                 ),
+                FloatingActionButton(
+                  onPressed: () {
+                    _controller.animateTo(0,
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.easeInOut);
+                  },
+                  child: Icon(Icons.arrow_upward),
+                ),
               ],
             ),
           ),
@@ -348,87 +573,86 @@ class _MobileScaffoldState extends State<MobileScaffold> {
       ),
     );
   }
+}
 
-  AppBar MobileAppbar(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const MobileScaffold(),
-              ));
-            },
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Image.asset('assets/mavunohub_icon.png',
-                      width: 28, height: 28),
-                ),
-              ],
-            ),
+AppBar MobileAppbar(BuildContext context) {
+  return AppBar(
+    backgroundColor: Colors.transparent,
+    actions: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const MobileScaffold(),
+            ));
+          },
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Image.asset('assets/mavunohub_icon.png',
+                    width: 28, height: 28),
+              ),
+            ],
           ),
         ),
-      ],
-      centerTitle: true,
-      title: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          height: 35,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary,
-            borderRadius: BorderRadius.circular(5.0),
+      ),
+    ],
+    centerTitle: true,
+    title: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: 35,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.secondary,
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        child: TextFormField(
+          maxLines: 1,
+          minLines: 1,
+          cursorColor: Theme.of(context).colorScheme.tertiary,
+          style: TextStyle(
+            fontFamily: 'Gilmer',
+            fontSize: 14,
+            color: Theme.of(context).colorScheme.onBackground,
+            fontWeight: FontWeight.w300,
           ),
-          child: TextFormField(
-            maxLines: 1,
-            minLines: 1,
-            cursorColor: Theme.of(context).colorScheme.tertiary,
-            style: TextStyle(
-              fontFamily: 'Gilmer',
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            disabledBorder: InputBorder.none,
+            hintText: "Search",
+            hintStyle: TextStyle(
               fontSize: 14,
-              color: Theme.of(context).colorScheme.onBackground,
-              fontWeight: FontWeight.w300,
+              color: Theme.of(context).hintColor,
+              fontFamily: "Gilmer",
+              fontWeight: FontWeight.w500,
             ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              hintText: "Search",
-              hintStyle: TextStyle(
-                fontSize: 14,
-                color: Theme.of(context).hintColor,
-                fontFamily: "Gilmer",
-                fontWeight: FontWeight.w500,
+            focusColor: Theme.of(context).colorScheme.tertiary,
+            isDense: true,
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.secondary,
+                width: 0,
               ),
-              focusColor: Theme.of(context).colorScheme.tertiary,
-              isDense: true,
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.secondary,
-                  width: 0,
-                ),
-              ),
-              fillColor: Theme.of(context).colorScheme.secondary,
-              filled: true,
-              prefixIcon:
-                  Icon(Icons.search, color: Theme.of(context).hintColor),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.tertiary,
-                  width: 2,
-                ),
+            ),
+            fillColor: Theme.of(context).colorScheme.secondary,
+            filled: true,
+            prefixIcon: Icon(Icons.search, color: Theme.of(context).hintColor),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.tertiary,
+                width: 2,
               ),
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
 }

@@ -65,6 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  bubble_showcase:
+    dependency: "direct main"
+    description:
+      name: bubble_showcase
+      sha256: cee0776c59ab648aaa651c861d51f47720754fe3ff505a680a3ea15bbffef15d
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   build:
     dependency: transitive
     description:
@@ -1032,6 +1040,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  showcase_tutorial:
+    dependency: "direct main"
+    description:
+      name: showcase_tutorial
+      sha256: "31522a17cc3e5fead10fa2de5254cae53a4bd72f5c24f452823667c85cc53662"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   showcaseview:
     dependency: "direct main"
     description:

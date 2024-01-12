@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.test">
+    package="com.example.mavunohub">
    <application
         android:label="MavunoHub"
         android:name="${applicationName}"

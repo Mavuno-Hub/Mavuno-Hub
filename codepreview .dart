@@ -1,817 +1,490 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:mavunohub/components/appbar.dart';
-import 'package:mavunohub/responsive/mobile_body.dart';
-import 'package:mavunohub/screens/app_screens/billing&transactions.dart';
-import 'package:mavunohub/screens/app_screens/services.dart';
-import 'package:mavunohub/styles/pallete.dart';
-import 'package:mavunohub/user_controller.dart';
+// import 'dart:developer';
 
-class ViewServices extends StatefulWidget {
-  const ViewServices({Key? key}) : super(key: key);
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:get/get.dart';
+// import 'package:http/http.dart' as http;
+// import 'package:mavunohub/components/bottom_menu.dart';
+// import 'package:showcaseview/showcaseview.dart';
+// import 'package:xml/xml.dart' as xml;
+// import 'package:html/parser.dart' as htmlParser;
+// import 'package:url_launcher/url_launcher.dart';
+// import 'package:webfeed/webfeed.dart';
+// import '../cards/news_feed.dart';
+// import '../cards/my_box.dart';
+// import '../cards/my_tile.dart';
+// import '../cards/updates&events.dart';
+// import '../components/drawer.dart';
+// import '../components/explainer.dart';
+// import '../screens/app_screens/news.dart';
+// import '../screens/app_screens/services.dart';
+// import '../styles/pallete.dart';
 
-  @override
-  State<ViewServices> createState() => _ViewServicesState();
-}
+// class MobileScaffold extends StatefulWidget {
+//   final String? username;
 
-class _ViewServicesState extends State<ViewServices> {
-  final UserController userController = Get.find<UserController>();
+//   const MobileScaffold({
+//     this.username,
+//   });
 
-  @override
-  void initState() {
-    super.initState();
-    userController.fetchUserDataFromFirestore();
-  }
+//   @override
+//   State<MobileScaffold> createState() => _MobileScaffoldState();
+// }
 
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: const CustomAppBar(title: 'Services'),
-        body:Padding(
-      padding: const EdgeInsets.all(1.0),
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        color: Theme.of(context).colorScheme.secondary,
-        child: ExpansionTile(
-          shape: Border(),  
-          title: Text(
-            'yyservice',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onBackground,
-              fontFamily: 'Gilmer',
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-            ),
-          ),
-          // subtitle: Text(
-          //   'condition: ' + condition,
-          //   style: TextStyle(
-          //     color: Theme.of(context).hintColor,
-          //     fontFamily: 'Gilmer',
-          //     fontWeight: FontWeight.w700,
-          //     fontSize: 10,
-          //   ),
-          // ),
-         subtitle: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: AppColor.valid.withOpacity(0.05)),
-           child: Padding(
-             padding: const EdgeInsets.all(3.0),
-             child: Center(
-               child: Row(
-                 children: [
-                   Text(
-                     ' Status:',
-                     style: TextStyle(
-                       color: Theme.of(context).colorScheme.onBackground,
-                       fontFamily: 'Gilmer',
-                       fontWeight: FontWeight.w700,
-                       fontSize: 12,
-                       
-                     ),
-                   ),
-                   const Text(
-                     ' Online',
-                     style: TextStyle(
-                       color: AppColor.valid,
-                       fontFamily: 'Gilmer',
-                       fontWeight: FontWeight.w700,
-                       fontSize: 12,
-                     
-                     ),
-                   ),
-                 ],
-               ),
-             ),
-           ),
-         ),
-    
-          trailing: SizedBox(
-            width: 150,
-            child: Center(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        height: 15,
-                        child: Row(
-                          children: [
-                            Text(
-                              'Last Changed:',
-                              style: TextStyle(
-                                color: Theme.of(context).hintColor,
-                                fontFamily: 'Gilmer',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
-                              ),
-                            ),
-                            // Text(
-                            //   '$duration',
-                            //   style: TextStyle(
-                            //     color: Theme.of(context).colorScheme.tertiary,
-                            //     fontFamily: 'Gilmer',
-                            //     fontWeight: FontWeight.w700,
-                            //     fontSize: 12,
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 15,
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            Text(
-                              ' {dateFormat.format(startDate)}',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.tertiary,
-                                fontFamily: 'Gilmer',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
-                              ),
-                            ),
-                            // Text(
-                            //   ' $condition',
-                            //   style: TextStyle(
-                            //     color: Theme.of(context).colorScheme.tertiary,
-                            //     fontFamily: 'Gilmer',
-                            //     fontWeight: FontWeight.w700,
-                            //     fontSize: 12,
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(flex: 1),
-                  InkWell(
-                    onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MobileScaffold()));
-                    },
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 3.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3),
-                            color: Theme.of(context).colorScheme.tertiary,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0).add(EdgeInsets.symmetric(horizontal: 8)),
-                            child: Row(
-                              children: [
-                                Text(
-                                  'More',
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.background,
-                                    fontFamily: 'Gilmer',
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                // Icon(Icons.arrow_right, color: Theme.of(context).colorScheme.background,size: 15,)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Start Date:'
-                            //  ${dateFormat.format(startDate)}',
-                      ,style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground,
-                        fontFamily: 'Gilmer',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
-                      ),
-                    ),
-                    // Text(
-                    //   'End Date:      ${dateFormat.format(endDate)}',
-                    //   style: TextStyle(
-                    //     color: Theme.of(context).colorScheme.onBackground,
-                    //     fontFamily: 'Gilmer',
-                    //     fontWeight: FontWeight.w700,
-                    //     fontSize: 12,
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    )
-      ),
-    );
-  }
+// class _MobileScaffoldState extends State<MobileScaffold> {
+//   GlobalKey _myTasksKey = GlobalKey();
+//   GlobalKey _myStatusKey = GlobalKey();
+//   GlobalKey _farmSetupKey = GlobalKey();
+//   GlobalKey _consultationKey = GlobalKey();
+//   GlobalKey _transactionsKey = GlobalKey();
+//   GlobalKey _newsFeedKey = GlobalKey();
 
-  Widget buildAllServicesTab() {
-    return ListView(
-      children: [
-        FutureBuilder<String>(
-          future: userController.getUsername(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              final username = snapshot.data;
-              if (username != null) {
-                // Pass the username to the ServiceList
-                return ServiceList(username: username);
-              } else {
-                // Handle the case where username is null (e.g., user not authenticated)
-                return Text('User not authenticated');
-              }
-            } else {
-              // Loading indicator while fetching username
-              return CircularProgressIndicator(color: AppColor.yellow);
-            }
-          },
-        ),
-      ],
-    );
-  }
+//   final scrollController = ScrollController();
 
-  Widget onlineServices() {
-    return FutureBuilder<String>(
-      future: userController.getUsername(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final username = snapshot.data;
-          if (username != null) {
-            return FutureBuilder<List<Map<String, dynamic>>>(
-              future: fetchServicesWithStatus(username, 'Online'),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  final List<Map<String, dynamic>> onlineServices =
-                      snapshot.data ?? [];
-                  if (onlineServices.isNotEmpty) {
-                    return ListView.builder(
-                      itemCount: onlineServices.length,
-                      itemBuilder: (context, index) {
-                        final serviceData = onlineServices[index];
-                        return ViewData(
-                          service: serviceData['service'] ?? '',
-                          condition: serviceData['condition'] ?? '',
-                          status: serviceData['status'] ?? '',
-                          duration:
-                              int.tryParse(serviceData['duration'] ?? '0') ?? 0,
-                          startDate:
-                              serviceData['start']?.toDate() ?? DateTime.now(),
-                          endDate:
-                              serviceData['end']?.toDate() ?? DateTime.now(),
-                        );
-                      },
-                    );
-                  } else {
-                    return Container(
-                      height: 200,
-                      child: Center(
-                        child: Text("No Online Services"),
-                      ),
-                    );
-                  }
-                } else {
-                  return CircularProgressIndicator(color: AppColor.yellow);
-                }
-              },
-            );
-          } else {
-            return Text('User not authenticated');
-          }
-        } else {
-          return CircularProgressIndicator(color: AppColor.yellow);
-        }
-      },
-    );
-  }
+//   bool loading = true;
+//   late Future<List<Map<String, String?>>> futureRss;
+//   late RssFeed _feed = RssFeed(items: []);
 
-  Widget bookedServices() {
-    return FutureBuilder<String>(
-      future: userController.getUsername(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final username = snapshot.data;
-          if (username != null) {
-            return FutureBuilder<List<Map<String, dynamic>>>(
-              future: fetchServicesWithStatus(username, 'Booked'),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  final List<Map<String, dynamic>> bookedServices =
-                      snapshot.data ?? [];
-                  if (bookedServices.isNotEmpty) {
-                    return ListView.builder(
-                      itemCount: bookedServices.length,
-                      itemBuilder: (context, index) {
-                        final serviceData = bookedServices[index];
-                        return ViewData(
-                          service: serviceData['service'] ?? '',
-                          condition: serviceData['condition'] ?? '',
-                          status: serviceData['status'] ?? '',
-                          duration:
-                              int.tryParse(serviceData['duration'] ?? '0') ?? 0,
-                          startDate:
-                              serviceData['start']?.toDate() ?? DateTime.now(),
-                          endDate:
-                              serviceData['end']?.toDate() ?? DateTime.now(),
-                        );
-                      },
-                    );
-                  } else {
-                    return Container(
-                      height: 200,
-                      child: Center(
-                        child: Text("No Booked Services"),
-                      ),
-                    );
-                  }
-                } else {
-                  return CircularProgressIndicator(color: AppColor.yellow);
-                }
-              },
-            );
-          } else {
-            return Text('User not authenticated');
-          }
-        } else {
-          return CircularProgressIndicator(color: AppColor.yellow);
-        }
-      },
-    );
-  }
+//   final rssUrl = 'https://kilimonews.co.ke/agribusiness/feed/';
 
-  Future<List<Map<String, dynamic>>> fetchServicesWithStatus(
-      String username, String status) async {
-    try {
-      final QuerySnapshot userQuery = await FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isEqualTo: username)
-          .get();
+//   Future<List<Map<String, String?>>> parseRss(String url) async {
+//     final response = await http.get(Uri.parse(url));
 
-      String userDocId = userQuery.docs.first.id;
-      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userDocId)
-          .collection('services')
-          .where('status', isEqualTo: status)
-          .limit(10)
-          .get();
+//     if (response.statusCode != 200) {
+//       throw Exception('Failed to fetch RSS feed');
+//     }
 
-      return querySnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
-    } catch (e) {
-      print(e);
-      return [];
-    }
-  }
+//     final rawRss = response.body;
+//     final document = xml.XmlDocument.parse(rawRss);
 
-  Future<List<Map<String, dynamic>>> fetchBookedServices(
-      String username) async {
-    try {
-      final QuerySnapshot userQuery = await FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isEqualTo: username)
-          .get();
+//     final items = <Map<String, String?>>[];
 
-      String userDocId = userQuery.docs.first.id;
-      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userDocId)
-          .collection('services')
-          .where('status', isEqualTo: 'Booked')
-          .limit(10)
-          .get();
+//     for (final node in document.findAllElements('item')) {
+//       final title = node.findElements('title').firstOrNull?.text;
+//       final contentEncoded =
+//           node.findElements('content:encoded').firstOrNull?.text;
+//       final description = node.findElements('description').firstOrNull?.text;
 
-      return querySnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
-    } catch (e) {
-      print(e);
-      return [];
-    }
-  }
-}
+//       String? imageUrl;
 
-class ServiceList extends StatefulWidget {
-  final String username;
+//       if (contentEncoded != null) {
+//         final document = htmlParser.parse(contentEncoded);
+//         final imgElement = document.querySelector('img');
 
-  ServiceList({required this.username});
+//         if (imgElement != null) {
+//           imageUrl = imgElement.attributes['src'];
+//         }
+//       }
 
-  @override
-  _ServiceListState createState() => _ServiceListState(username: username);
-}
+//       if (title != null) {
+//         items.add({
+//           'title': title,
+//           'imageUrl': imageUrl,
+//           'description': description,
+//         });
+//       }
+//     }
 
-class _ServiceListState extends State<ServiceList> {
-  final String username;
-  List<QueryDocumentSnapshot> services = [];
+//     final xmlString = response.body;
+//     final channel = RssFeed.parse(xmlString);
+//     setState(() {
+//       _feed = channel;
+//     });
+//     return items;
+//   }
 
-  _ServiceListState({required this.username});
+//   @override
+//   void initState() {
+//     super.initState();
+//     futureRss = parseRss(rssUrl);
+//     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+//       Future.delayed(const Duration(seconds: 3), () {
+//         setState(() {
+//           loading = false;
+//         });
+//       });
+//     });
 
-  bool isLoading = true;
-  final UserController userController = Get.find();
-  @override
-  void initState() {
-    super.initState();
-    loadServices();
-  }
+//     ambiguate(WidgetsBinding.instance)?.addPostFrameCallback(
+//       (_) => ShowCaseWidget.of(context).startShowCase([
+//         _myTasksKey,
+//         _myStatusKey,
+//         _farmSetupKey,
+//         _consultationKey,
+//         _transactionsKey,
+//         _newsFeedKey
+//       ]),
+//     );
+//   }
 
-  Future<void> loadServices() async {
-    try {
-      final QuerySnapshot userQuery = await FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isEqualTo: username)
-          .get();
+//   final _controller = ScrollController();
 
-      String userDocId = userQuery.docs.first.id;
-      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userDocId)
-          .collection('services')
-          // .orderBy('date',
-          //     descending: true) // Order by 'date' in descending order
-          .limit(10)
-          .get();
+//   Widget build(BuildContext context) {
+//     // Wrap your entire Scaffold with ShowcaseView
 
-      setState(() {
-        services = querySnapshot.docs;
-        isLoading = false;
-      });
-    } catch (e) {
-      print(e);
-    }
-    // Load the first 10 services from the 'services' subcollection of a specific user
-  }
+//     return ShowCaseWidget(
+//       onStart: (index, key) {
+//         if (index == 0) {
+//           WidgetsBinding.instance.addPostFrameCallback(
+//             (_) {
+           
+//               _controller.jumpTo(1000);
+//             },
+//           );
+//         }
+//       },
+//       onComplete: (index, key) {
+//         log('onComplete: $index, $key');
+//         if (index == 4) {
+//           SystemChrome.setSystemUIOverlayStyle(
+//             SystemUiOverlayStyle.light.copyWith(
+//               statusBarIconBrightness: Brightness.dark,
+//               statusBarColor: Colors.white,
+//             ),
+//           );
+//         }
+//       },
+//       blurValue: 1,
+//       builder: Builder(builder: (context) => _buildScaffold(context)),
+//       // Add necessary ShowcaseView options here
+//       autoPlayDelay: const Duration(seconds: 3),
+//     );
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (isLoading) {
-      // Display a loading indicator while data is being fetched.
-      return Container(
-        height: 400,
-        child: const Center(
-          child: CircularProgressIndicator(color: AppColor.yellow),
-        ),
-      );
-    } else if (services.isEmpty) {
-      // Display "No Service Added" message when the 'services' collection is empty or doesn't exist.
-      return Container(
-        height: 200,
-        child: const Center(
-          child: Text("No Service Added"),
-        ),
-      );
-    }
-
-    // Build and return the ListView with service data.
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: services.length,
-      itemBuilder: (context, index) {
-        final serviceData = services[index].data() as Map<String, dynamic>;
-        return ViewData(
-          service: serviceData['service'] ?? '',
-          status: serviceData['status'] ?? '',
-          condition: serviceData['condition'] ?? '',
-          duration: int.tryParse(serviceData['duration'] ?? '0') ?? 0,
-          startDate: serviceData['start']?.toDate() ?? DateTime.now(),
-          endDate: serviceData['end']?.toDate() ?? DateTime.now(),
-        );
-      },
-    );
-  }
-}
-
-// ViewData Widget remains unchanged as per the original.
-Color getStatusColor(String status, BuildContext context) {
-  if (status == 'Online') {
-    return Theme.of(context).colorScheme.surface;
-  } else if (status == 'deactivated') {
-    return Theme.of(context).colorScheme.errorContainer;
-  } else if (status == 'Booked') {
-    return Theme.of(context).colorScheme.tertiary;
-  } else if (status.isEmpty) {
-    return Theme.of(context).colorScheme.secondary;
-  }
-  // Default color if status is neither 'Online' nor 'Booked'
-  return Theme.of(context).colorScheme.surface;
-}
-
-// getStatusAction(String status, BuildContext context) {
-//   if (status == 'Booked') {
-//     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Billing()));
-//   } else {
-//     // Navigate to another screen or handle differently if the status is not 'Booked'
-//     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Services()));
+//   Widget _buildScaffold(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Theme.of(context).colorScheme.background,
+//       appBar: MobileAppbar(context),
+//       drawer: const IconMenu(),
+//       body: SafeArea(
+//         child: SingleChildScrollView(
+//           child: Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 12.0),
+//             child: Column(
+//               children: [
+//                 Align(
+//                   alignment: Alignment.centerLeft,
+//                   child: Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 15.0)
+//                         .add(const EdgeInsets.symmetric(vertical: 10)),
+//                     child: SizedBox(
+//                       height: 25,
+//                       child: Text(
+//                         'Welcome ${widget.username}',
+//                         textAlign: TextAlign.center,
+//                         style: TextStyle(
+//                           fontFamily: 'Gilmer',
+//                           fontSize: 26,
+//                           color: Theme.of(context).colorScheme.onBackground,
+//                           fontWeight: FontWeight.w800,
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//                 Container(
+//                   height: 180,
+//                   child: Row(
+//                     children: [
+//                       Expanded(
+//                         child: Explainer(
+//                           keyValue: _myTasksKey,
+//                           title: 'My Tasks',
+//                           description: 'Click here to manage your tasks!',
+//                           target: MyBox(
+//                             title: 'My Tasks',
+//                             onClicked: () {
+//                               Navigator.of(context).push(MaterialPageRoute(
+//                                 builder: (context) => const Services(),
+//                               ));
+//                             },
+//                           ),
+//                         ),
+//                       ),
+//                       const Expanded(
+//                         child: MyBox(title: 'My Status'),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//                 Container(
+//                   height: 220,
+//                   child: ListView.builder(
+//                     itemCount: 4,
+//                     itemBuilder: (context, index) {
+//                       if (index == 0) {
+//                         return Explainer(
+//                           keyValue: _farmSetupKey,
+//                           title: 'Farm Setup',
+//                           description: 'Explore the latest news here!',
+//                           target: MyTile(
+//                             title: 'Farm Setup',
+//                             action: () {
+//                               final snackBarHelper = SnackBarHelper(context);
+//                               snackBarHelper.showCustomSnackBarWithMenu();
+//                             },
+//                           ),
+//                         );
+//                       } else if (index == 1) {
+//                         return Explainer(
+//                           keyValue: _consultationKey,
+//                           title: 'Consultation Services',
+//                           description: 'Explore the latest news here!',
+//                           target: MyTile(title: 'Consultation Services'),
+//                         );
+//                       } else if (index == 2) {
+//                         return Explainer(
+//                           keyValue: _transactionsKey,
+//                           title: 'Billings & Transactions',
+//                           description: 'Explore the latest news here!',
+//                           target:
+//                               const MyTile(title: 'Billings & Transactions'),
+//                         );
+//                       } else {
+//                         return const SizedBox.shrink();
+//                       }
+//                     },
+//                   ),
+//                 ),
+//                 GestureDetector(
+//                   onTap: () {
+//                     Navigator.of(context).push(MaterialPageRoute(
+//                       builder: (context) => News(),
+//                     ));
+//                   },
+//                   child: Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 10.0).add(
+//                         const EdgeInsets.symmetric(vertical: 5)
+//                             .add(const EdgeInsets.only(top: 10))),
+//                     child: Row(
+//                       children: [
+//                         Explainer(
+//                           keyValue: _newsFeedKey,
+//                           title: 'News Feed',
+//                           description: 'Explore the latest news here!',
+//                           target: Text(
+//                             'News Feed',
+//                             style: TextStyle(
+//                               fontFamily: 'Gilmer',
+//                               fontSize: 14,
+//                               color: Theme.of(context).hintColor,
+//                               fontWeight: FontWeight.w700,
+//                             ),
+//                           ),
+//                         ),
+//                         const Spacer(flex: 1),
+//                         Text(
+//                           'More',
+//                           style: TextStyle(
+//                             fontFamily: 'Gilmer',
+//                             fontSize: 14,
+//                             color: Theme.of(context).colorScheme.tertiary,
+//                             fontWeight: FontWeight.w700,
+//                           ),
+//                         ),
+//                         Icon(
+//                           Icons.arrow_forward_rounded,
+//                           size: 14,
+//                           color: Theme.of(context).colorScheme.tertiary,
+//                         )
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//                 Container(
+//                   height: 300,
+//                   child: SizedBox(
+//                     width: 420,
+//                     child: FutureBuilder<List<Map<String, String?>>>(
+//                       future: futureRss,
+//                       builder: (context, snapshot) {
+//                         if (snapshot.connectionState ==
+//                             ConnectionState.waiting) {
+//                           return const Center(
+//                             child: CircularProgressIndicator(
+//                               color: AppColor.yellow,
+//                             ),
+//                           );
+//                         } else if (snapshot.hasError) {
+//                           return Center(
+//                             child: Text('Error: ${snapshot.error}'),
+//                           );
+//                         } else if (!snapshot.hasData ||
+//                             snapshot.data!.isEmpty) {
+//                           return Center(child: Text('No data available'));
+//                         } else {
+//                           return ListView.builder(
+//                             scrollDirection: Axis.horizontal,
+//                             itemCount: snapshot.data!.length,
+//                             itemBuilder: (context, index) {
+//                               final item = snapshot.data![index];
+//                               final items = _feed.items?[index];
+//                               return NewsFeed(
+//                                 title: item['title'],
+//                                 imageUrl: item['imageUrl'],
+//                                 onClicked: () async {
+//                                   if (items?.link != null) {
+//                                     await launch(items!.link!);
+//                                   }
+//                                 },
+//                                 shortDescription: item['description'],
+//                               );
+//                             },
+//                           );
+//                         }
+//                       },
+//                     ),
+//                   ),
+//                 ),
+//                 GestureDetector(
+//                   child: Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 10.0).add(
+//                         const EdgeInsets.symmetric(vertical: 5)
+//                             .add(const EdgeInsets.only(top: 10))),
+//                     child: Row(
+//                       children: [
+//                         Text(
+//                           'Updates & Events',
+//                           style: TextStyle(
+//                             fontFamily: 'Gilmer',
+//                             fontSize: 14,
+//                             color: Theme.of(context).hintColor,
+//                             fontWeight: FontWeight.w700,
+//                           ),
+//                         ),
+//                         const Spacer(flex: 1),
+//                         Text(
+//                           'More',
+//                           style: TextStyle(
+//                             fontFamily: 'Gilmer',
+//                             fontSize: 14,
+//                             color: Theme.of(context).colorScheme.tertiary,
+//                             fontWeight: FontWeight.w700,
+//                           ),
+//                         ),
+//                         Icon(
+//                           Icons.arrow_forward_rounded,
+//                           size: 14,
+//                           color: Theme.of(context).colorScheme.tertiary,
+//                         )
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//                 Padding(
+//                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
+//                   child: Container(
+//                     height: 150,
+//                     child: ListView.builder(
+//                       itemCount: 5,
+//                       scrollDirection: Axis.horizontal,
+//                       itemBuilder: (context, index) {
+//                         return SizedBox(
+//                           width: 300,
+//                           child: Updates(),
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                 ),
+//                  FloatingActionButton(
+//                   onPressed: () {
+//                     _controller.animateTo(0,
+//                         duration: Duration(milliseconds: 500),
+//                         curve: Curves.easeInOut);
+//                   },
+//                   child: Icon(Icons.arrow_upward),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
 //   }
 // }
 
-
-class ViewData extends StatelessWidget {
-  final String? service;
-  final String condition;
-  final int duration;
-  final DateTime startDate;
-  final String status;
-  final DateTime endDate;
-
-  ViewData({
-    this.service,
-    required this.condition,
-    required this.status,
-    required this.duration,
-    required this.startDate,
-    required this.endDate,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // Define a date format
-    final dateFormat = DateFormat('MMM d, y'); // Customize the format as needed
-    Color statusColor = getStatusColor(status, context);
-    // Function() statusAction = getStatusAction(status, context);
-
-    return Padding(
-      padding: const EdgeInsets.all(1.0),
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        color: Theme.of(context).colorScheme.secondary,
-        child: ExpansionTile(
-          shape: Border(),
-          title: Text(
-            '$service',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onBackground,
-              fontFamily: 'Gilmer',
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-            ),
-          ),
-          subtitle: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: statusColor.withOpacity(0.05)),
-            child: Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Center(
-                child: Row(
-                  children: [
-                    Text(
-                      ' Status: ',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground,
-                        fontFamily: 'Gilmer',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
-                      ),
-                    ),
-                    Text(
-                      status,
-                      style: TextStyle(
-                        color: statusColor,
-                        fontFamily: 'Gilmer',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          trailing: SizedBox(
-            width: 150,
-            child: Center(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        height: 15,
-                        child: Row(
-                          children: [
-                            Text(
-                              'Last Changed:',
-                              style: TextStyle(
-                                color: Theme.of(context).hintColor,
-                                fontFamily: 'Gilmer',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 15,
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            Text(
-                              ' ${dateFormat.format(startDate)}',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.tertiary,
-                                fontFamily: 'Gilmer',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(flex: 1),
-                  InkWell(
-                    onTap: () {
-                      if (status == 'Booked') {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Billing(),
-                        ));
-                      } else {
-                        // Navigate to another screen or handle differently if the status is not 'Booked'
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Services(),
-                        ));
-                      }
-                    },
-                    // onTap: statusAction,
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 3.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3),
-                            color: Theme.of(context).colorScheme.tertiary,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0)
-                                .add(EdgeInsets.symmetric(horizontal: 8)),
-                            child: Row(
-                              children: [
-                               Text(
-  status == 'Booked' ? 'Pay' : 'More',
-  style: TextStyle(
-    color: Theme.of(context).colorScheme.background,
-    fontFamily: 'Gilmer',
-    fontWeight: FontWeight.w700,
-    fontSize: 12,
-  ),
-),
+// AppBar MobileAppbar(BuildContext context) {
+//   return AppBar(
+//     backgroundColor: Colors.transparent,
+//     actions: [
+//       Padding(
+//         padding: const EdgeInsets.all(8.0),
+//         child: GestureDetector(
+//           onTap: () {
+//             Navigator.of(context).push(MaterialPageRoute(
+//               builder: (context) => const MobileScaffold(),
+//             ));
+//           },
+//           child: Row(
+//             children: [
+//               Padding(
+//                 padding: const EdgeInsets.all(10.0),
+//                 child: Image.asset('assets/mavunohub_icon.png',
+//                     width: 28, height: 28),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     ],
+//     centerTitle: true,
+//     title: Padding(
+//       padding: const EdgeInsets.all(8.0),
+//       child: Container(
+//         height: 35,
+//         width: double.infinity,
+//         decoration: BoxDecoration(
+//           color: Theme.of(context).colorScheme.secondary,
+//           borderRadius: BorderRadius.circular(5.0),
+//         ),
+//         child: TextFormField(
+//           maxLines: 1,
+//           minLines: 1,
+//           cursorColor: Theme.of(context).colorScheme.tertiary,
+//           style: TextStyle(
+//             fontFamily: 'Gilmer',
+//             fontSize: 14,
+//             color: Theme.of(context).colorScheme.onBackground,
+//             fontWeight: FontWeight.w300,
+//           ),
+//           decoration: InputDecoration(
+//             border: InputBorder.none,
+//             disabledBorder: InputBorder.none,
+//             hintText: "Search",
+//             hintStyle: TextStyle(
+//               fontSize: 14,
+//               color: Theme.of(context).hintColor,
+//               fontFamily: "Gilmer",
+//               fontWeight: FontWeight.w500,
+//             ),
+//             focusColor: Theme.of(context).colorScheme.tertiary,
+//             isDense: true,
+//             contentPadding:
+//                 const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+//             enabledBorder: OutlineInputBorder(
+//               borderRadius: BorderRadius.circular(8),
+//               borderSide: BorderSide(
+//                 color: Theme.of(context).colorScheme.secondary,
+//                 width: 0,
+//               ),
+//             ),
+//             fillColor: Theme.of(context).colorScheme.secondary,
+//             filled: true,
+//             prefixIcon: Icon(Icons.search, color: Theme.of(context).hintColor),
+//             focusedBorder: OutlineInputBorder(
+//               borderRadius: BorderRadius.circular(8),
+//               borderSide: BorderSide(
+//                 color: Theme.of(context).colorScheme.tertiary,
+//                 width: 2,
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }
 
 
-                                // Icon(Icons.arrow_right, color: Theme.of(context).colorScheme.background,size: 15,)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 3.0),
-                            child: Container(
-                              width: 100,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(3),
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .tertiary
-                                    .withOpacity(0.05),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0)
-                                    .add(EdgeInsets.symmetric(horizontal: 8)),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        'Book',
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .tertiary,
-                                          fontFamily: 'Gilmer',
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 3.0),
-                            child: Container(
-                              width: 100,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(3),
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .tertiary
-                                    .withOpacity(0.05),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0)
-                                    .add(EdgeInsets.symmetric(horizontal: 8)),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        'Deactivate',
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .tertiary,
-                                          fontFamily: 'Gilmer',
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
+// 47z4%666B4

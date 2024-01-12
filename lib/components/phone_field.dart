@@ -73,7 +73,7 @@ FocusNode focusNode = FocusNode();
                       color: Theme.of(context).colorScheme.onBackground,
                       fontWeight: FontWeight.w700,
                     ),
-                    inputFormatters: const [],
+                    // inputFormatters: const [],
                     textAlignVertical: TextAlignVertical.center,
                     dropdownIcon: Icon(
                       Icons.arrow_drop_down,
@@ -88,6 +88,9 @@ FocusNode focusNode = FocusNode();
                         fontWeight: FontWeight.w700,
                       ),
                     ),
+                    
+                    disableAutoFillHints: true,
+                    disableLengthCheck: false,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     // ignore: deprecated_member_use
                     searchText: 'Select Country',

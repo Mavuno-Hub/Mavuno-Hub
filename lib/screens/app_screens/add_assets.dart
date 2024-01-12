@@ -20,6 +20,7 @@ class AddAsset extends StatefulWidget {
 class _FarmSetupState extends State<AddAsset> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _assets = TextEditingController();
+    final TextEditingController _location = TextEditingController();
   final TextEditingController _condition = TextEditingController();
   final TextEditingController _duration = TextEditingController();
   bool isSliderInteracted = false;
@@ -141,6 +142,9 @@ class _FarmSetupState extends State<AddAsset> {
           await farmSetupCollection.add({
             'asset': _assets.text,
             'condition': _condition.text,
+            'location': _location.text,
+            'country': 'Kenya',
+            'country_code':'KE',
             'duration': _duration.text,
             'start': selectedStartDate,
             'end': selectedEndDate,
@@ -224,6 +228,11 @@ class _FarmSetupState extends State<AddAsset> {
                           text: "Condition",
                           hint:
                               'Condition of the Asset (Rate condition from 1-10)',
+                        ),
+                         FormDropDown(
+                          text: 'Select Location',
+                          list: citiesKe,
+                          controller: _location,
                         ),
                         FormSlider(
                           text: 'text',

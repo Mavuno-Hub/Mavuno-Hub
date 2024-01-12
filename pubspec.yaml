@@ -42,6 +42,8 @@ dependencies:
   webfeed: ^0.7.0
   html: ^0.15.4
   showcaseview: ^2.0.3
+  showcase_tutorial: ^1.0.5
+  bubble_showcase: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

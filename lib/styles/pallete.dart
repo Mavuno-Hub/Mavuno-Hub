@@ -23,6 +23,7 @@ class AppColor {
   static const Color hintText = Color(0xFFc1b6b4);
   static const Color accentLight = Color.fromARGB(255, 236, 236, 236);
   static const Color yellow = Color(0xFFFFAE00);
+    static const Color yell = Color(0xF9FF5900);
   static const Color error = Color.fromARGB(255, 255, 17, 0);
   static const Color valid = Color.fromARGB(255, 90, 201, 0);
   static const Color white = Color.fromRGBO(255, 255, 255, 1);

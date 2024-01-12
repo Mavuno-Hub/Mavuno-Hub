@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mavunohub/components/drawer.dart';
 import 'package:mavunohub/cards/my_box.dart';
@@ -7,13 +8,52 @@ import '../components/bottom_menu.dart';
 import '../screens/app_screens/news.dart';
 
 class TabletScaffold extends StatefulWidget {
-  const TabletScaffold({super.key});
+
+    final String? username;
+
+  const TabletScaffold({
+    this.username,
+  });
+
 
   @override
   State<TabletScaffold> createState() => _TabletScaffoldState();
 }
 
 class _TabletScaffoldState extends State<TabletScaffold> {
+
+
+  
+  Future<Map<String, int>> getServiceCount() async {
+    try {
+      final QuerySnapshot userQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: widget.username)
+          .get();
+
+      String userDocId = userQuery.docs.first.id;
+      final QuerySnapshot querySnapshotService = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .doc(userDocId)
+          .collection('services')
+          .get();
+      final QuerySnapshot querySnapshotAssets = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userDocId)
+          .collection('assets')
+          .get();
+
+      int serviceCount = querySnapshotService.size;
+      int assetCount = querySnapshotAssets.size;
+
+      return {'services': serviceCount, 'assets': assetCount};
+    } catch (e) {
+      print(e);
+      return {'services': 0, 'assets': 0}; // Return 0 in case of an error
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,13 +77,17 @@ class _TabletScaffoldState extends State<TabletScaffold> {
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       // First instance of MyBox with different properties
-                      return const MyBox(
+                      return  MyBox(
                         title: 'My Tasks',
+                           opFunction: () => getServiceCount(), // Pass the function correctly
+                       
                       );
                     } else if (index == 1) {
                       // Second instance of MyBox with different properties
-                      return const MyBox(
+                      return  MyBox(
                         title: 'My Status',
+                           opFunction: () => getServiceCount(), // Pass the function correctly
+                       
                       );
                     } else {
                       return const SizedBox.shrink();

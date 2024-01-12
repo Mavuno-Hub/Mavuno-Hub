@@ -67,7 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '914748917180',
     projectId: 'mavunohub-37adb',
     storageBucket: 'mavunohub-37adb.appspot.com',
-    iosBundleId: 'com.example.test',
+    iosBundleId: 'com.example.mavunohub',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -76,6 +76,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '914748917180',
     projectId: 'mavunohub-37adb',
     storageBucket: 'mavunohub-37adb.appspot.com',
-    iosBundleId: 'com.example.test.RunnerTests',
+    iosBundleId: 'com.example.mavunohub.RunnerTests',
   );
 }

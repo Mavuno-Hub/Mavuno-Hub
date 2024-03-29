@@ -253,8 +253,8 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                                   opFunction: () => getServiceCount(),
                                   holder2: 'Complete',
                                   holder3: 'All',
-                                   type1: 'assets',
-                                    type2: 'services',
+                                  type1: 'assets',
+                                  type2: 'services',
                                   onClicked: () {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
@@ -267,11 +267,12 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                             Expanded(
                               // width: MediaQuery.of(context).size.width / 2,
                               child: SizedBox(
-                                  width: MediaQuery.of(context).size.width / 2,
+                                width: MediaQuery.of(context).size.width / 2,
                                 child: Showcase(
                                   key: _myStatusKey,
                                   title: 'My Status',
-                                  description: 'Click here to check your status!',
+                                  description:
+                                      'Click here to check your status!',
                                   child: MyBox(
                                     title: 'My Status',
                                     holder1: 'Assets',
@@ -283,7 +284,8 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                                     onClicked: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) => const Services(),
+                                          builder: (context) =>
+                                              const Services(),
                                         ),
                                       );
                                     },
@@ -400,7 +402,13 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                           key: _transactionsKey,
                           title: 'Billings & Transactions',
                           description: 'Explore the latest news here!',
-                          child: const MyTile(title: 'Billings & Transactions'),
+                          child:  MyTile(
+                            title: 'Billings & Transactions',
+                            action: () {
+                             final snackBarHelper = SnackBarHelper(context);
+                                snackBarHelper.showPaymentOptions();
+                            }
+                          ),
                         );
                       } else {
                         return const SizedBox.shrink();

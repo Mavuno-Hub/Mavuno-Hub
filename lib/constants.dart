@@ -66,3 +66,4 @@
 //     ),
 //   );
 // });
+String kConsumerSecret = '';

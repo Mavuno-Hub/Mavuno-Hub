@@ -1,0 +1,15 @@
+flutter_native_splash:
+  color: "#403936"
+  image: "assets/mavuno_hub_icon_640px.png"
+  # branding: "assets/app_icon/ekanisa_icon_dark@2x.png"
+  color_dark: "#403936"
+  image_dark: "assets/mavuno_hub_icon_640px.png"
+  # branding_dark: "assets/app_icon/ekanisa_icon_dark@2x.png"
+  android_12:
+    image: "assets/mavuno_hub_icon_640px.png"
+    icon_background_color: "#403936"
+    image_dark: "assets/mavuno_hub_icon_640px.png"
+    icon_background_color_dark: "#403936"
+  web: true
+
+ 

@@ -11,12 +11,14 @@ import 'package:mavunohub/responsive/mobile_body.dart';
 import 'package:mavunohub/screens/app_screens/log_in_page.dart';
 import 'package:mavunohub/screens/app_screens/news.dart';
 import 'package:mavunohub/user_controller.dart';
-
+import 'package:mpesa_flutter_plugin/mpesa_flutter_plugin.dart';
 import 'styles/theme/dark_theme.dart';
 import 'styles/theme/light_theme.dart';
 // import 'dart:io';
 import 'package:provider/provider.dart';
 // import 'package:firebase_core/firebase_core';
+
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +34,13 @@ Future<void> main() async {
   //     print("completedAppInitialize");
   //   });
   // }
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  MpesaFlutterPlugin.setConsumerKey(
+      'ksMDZuRG1c9AIUZf3QFdAWjnNll7bM5dbGTuIkH9jGxVkcjv');
+  MpesaFlutterPlugin.setConsumerSecret(
+      'DIns5VnZxwNFRoioNY8AhMawpwZpIjhAd896KhkCWJDvG37VjHtsWZn8rAripA33');
   // FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   runApp(const MyApp());
@@ -44,16 +52,27 @@ class MyApp extends StatelessWidget {
 // For enabling Firebase Emulator Tool
   //
 //   @override
-// void initState(){
-//   String host = Platform.isAndroid ? '10.0.2.2:8080' : 'localhost:8080';
+  // void initState() {
+  //   // String host = Platform.isAndroid ? '10.0.2.2:8080' : 'localhost:8080';
+  //   FlutterNativeSplash.remove();
+  //   // Firebase.instance.settings(
+  //   //   host: host,
+  //   //   sslEnabled: false,
+  //   //   persistenceEnabled: false,
+  //   // );
+  //   // super.initState();
+  // }
 
-//   Firebase.instance.settings(
-//     host: host,
-//     sslEnabled: false,
-//     persistenceEnabled: false, 
-//   );
-//   // super.initState();
-// }
+    @override
+  void initState() {
+    // super.initState();
+    initialization();
+    // super.initState();
+  }
+  void initialization() async {
+    await Future.delayed(const Duration(seconds: 1));
+    FlutterNativeSplash.remove();
+  }
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -71,7 +90,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
         darkTheme: darkTheme,
-        home:  LogInUser(),
+        home: LogInUser(),
         initialBinding: UserBindings(),
       ),
     );

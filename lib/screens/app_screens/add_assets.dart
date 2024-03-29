@@ -170,47 +170,50 @@ class _FarmSetupState extends State<AddAsset> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
         children: [
-          DotStepper(
-            direction: Axis.horizontal,
-            dotCount: dotCount,
-            dotRadius: 18,
-
-            /// THIS MUST BE SET. SEE HOW IT IS CHANGED IN NEXT/PREVIOUS BUTTONS AND JUMP BUTTONS.
-            activeStep: activeStep,
-            shape: Shape.stadium,
-            spacing: 18,
-            indicator: Indicator.shift,
-
-            /// TAPPING WILL NOT FUNCTION PROPERLY WITHOUT THIS PIECE OF CODE.
-            onDotTapped: (tappedDotIndex) {
-              setState(() {
-                activeStep = tappedDotIndex;
-              });
-            },
-
-            // DOT-STEPPER DECORATIONS
-            fixedDotDecoration: FixedDotDecoration(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-
-            indicatorDecoration: IndicatorDecoration(
-              // style: PaintingStyle.stroke,
-              // strokeWidth: 8,
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
-            lineConnectorDecoration: LineConnectorDecoration(
-              color:Theme.of(context).colorScheme.secondary,
-              strokeWidth: 0,
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: DotStepper(
+              direction: Axis.horizontal,
+              dotCount: dotCount,
+              dotRadius: 18,
+            
+              /// THIS MUST BE SET. SEE HOW IT IS CHANGED IN NEXT/PREVIOUS BUTTONS AND JUMP BUTTONS.
+              activeStep: activeStep,
+              shape: Shape.stadium,
+              spacing: 18,
+              indicator: Indicator.shift,
+            
+              /// TAPPING WILL NOT FUNCTION PROPERLY WITHOUT THIS PIECE OF CODE.
+              onDotTapped: (tappedDotIndex) {
+                setState(() {
+                  activeStep = tappedDotIndex;
+                });
+              },
+            
+              // DOT-STEPPER DECORATIONS
+              fixedDotDecoration: FixedDotDecoration(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            
+              indicatorDecoration: IndicatorDecoration(
+                // style: PaintingStyle.stroke,
+                // strokeWidth: 8,
+                color: Theme.of(context).colorScheme.tertiary,
+              ),
+              lineConnectorDecoration: LineConnectorDecoration(
+                color:Theme.of(context).colorScheme.secondary,
+                strokeWidth: 0,
+              ),
             ),
           ),
-          SingleChildScrollView(
-            child: Center(
-              child: SizedBox(
-                width: 360,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Form(
-                    key: _formKey,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Form(
+                key: _formKey,
+                child: Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -229,11 +232,11 @@ class _FarmSetupState extends State<AddAsset> {
                           hint:
                               'Condition of the Asset (Rate condition from 1-10)',
                         ),
-                         FormDropDown(
-                          text: 'Select Location',
-                          list: citiesKe,
-                          controller: _location,
-                        ),
+                        //  FormDropDown(
+                        //   text: 'Select Location',
+                        //   list: citiesKe,
+                        //   controller: _location,
+                        // ),
                         FormSlider(
                           text: 'text',
                           onChanged: (int value) {

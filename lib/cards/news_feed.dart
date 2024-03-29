@@ -209,7 +209,10 @@ class _NewsFeedState extends State<NewsFeed> {
                           ),
                           
                           child: Container(
-                            decoration: BoxDecoration(color: Theme.of(context).colorScheme.tertiary.withOpacity(0.05), borderRadius: BorderRadius.circular(8)),
+                            decoration: BoxDecoration(
+                              // color: Theme.of(context).colorScheme.tertiary.withOpacity(0.05),
+                              color: Colors.transparent,
+                               borderRadius: BorderRadius.circular(8)),
                             child: Row(
                               children: [
                                 // Container(

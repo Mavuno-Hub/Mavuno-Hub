@@ -25,15 +25,20 @@ class NewsFeed extends StatefulWidget {
   State<NewsFeed> createState() => _NewsFeedState();
 }
 
+// res.header("Access-Control-Allow-Origin", "*");
+// res.header("Access-Control-Allow-Methods", "GET,PUT,PATCH,POST,DELETE");
+// res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 class _NewsFeedState extends State<NewsFeed> {
    Map<String, String> headers = {
+        'Access-Control-Allow-Origin': '*', // Allow requests from any origin
           'Content-Type': 'text/plain', // Adjust this based on your needs
       "Access-Control-Allow-Origin": "*", // Required for CORS support to work
       //  "auth-token": idToken, // whatever headers you need(I add auth) // Specify content-type as JSON to prevent empty response body
        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+       "Access-Control-Allow-Headers": "'",
       // "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
       "Access-Control-Allow-Headers":
-          "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+          "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale, Origin, X-Requested-With, Content-Type, Accept",
       'Accept': '*/*'
     };
     

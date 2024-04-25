@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mpesa_flutter_plugin/mpesa_flutter_plugin.dart';
+import 'dart:collection';
 
 class Mpesa extends StatelessWidget {
   const Mpesa({super.key});
@@ -28,7 +29,7 @@ class Mpesa extends StatelessWidget {
               passKey:
                   'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919');
 
-      //HashMap result = transactionInitialisation as HashMap<String, dynamic>;
+      HashMap result = transactionInitialisation as HashMap<String, dynamic>;
       print('RESULT' + transactionInitialisation.toString());
     } catch (e) {
 //you can implement your exception handling here.
@@ -51,7 +52,7 @@ class Mpesa extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       // appBar: AppBar(
       //   backgroundColor: Colors.blueAccent,
-      //   title: const Text("M-PESA", style: TextStyle(color: Colors.white),),
+      //   title: const Text("M-PESA", style: TextStyle(color: Theme.of(context).colorScheme.tertiary.withOpacity(0.4)),),
       // ),
       body: Column(
         children: [
@@ -68,27 +69,33 @@ class Mpesa extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.security,
-                    color: Colors.white,
+                    color:
+                        Theme.of(context).colorScheme.tertiary.withOpacity(0.4),
                     size: 50,
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
+                  Text(
                     'Start by choosing a payment method',
                     style: TextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .tertiary
+                            .withOpacity(0.4),
                         fontWeight: FontWeight.bold,
                         fontSize: 20),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
+                  Text(
                     'Add a preffered payment method complete your purchase. Your payment method is only visible to Google',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 16),
                   ),
                   const SizedBox(
                     height: 20,
@@ -98,20 +105,27 @@ class Mpesa extends StatelessWidget {
                         startTransaction(amount: 1.0, phone: '254758214490');
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .tertiary
+                            .withOpacity(0.4),
                         fixedSize: const Size(300, 20),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.phone_android_outlined),
                           SizedBox(
                             width: 8,
                           ),
-                          Text('Add M-PESA Xpress billing'),
+                          Text(
+                            'Add M-PESA Xpress billing',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary),
+                          ),
                         ],
                       )),
                   const SizedBox(
@@ -122,20 +136,28 @@ class Mpesa extends StatelessWidget {
                         startTransaction(amount: 1.0, phone: '254758214490');
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .tertiary
+                            .withOpacity(0.4),
                         fixedSize: const Size(300, 20),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.payment),
                           SizedBox(
                             width: 8,
                           ),
-                          Text('Add credit or debit card'),
+                          Text(
+                            'Add credit or debit card',
+                            style: TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.background),
+                          ),
                         ],
                       )),
                 ],

@@ -36,6 +36,7 @@ dependencies:
   redacted: ^1.0.11
   dio: ^5.3.3
   freezed: ^2.4.5
+  overlay_tooltip:
   cached_network_image: ^3.3.0
   freezed_annotation: ^2.4.1
   flutter_riverpod: ^2.4.5
@@ -46,7 +47,6 @@ dependencies:
   showcase_tutorial: ^1.0.5
   bubble_showcase: ^1.1.0
   mpesa_flutter_plugin: ^1.6.1
-  overlay_tooltip: ^0.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
